@@ -44,8 +44,11 @@ const styles = StyleSheet.create({
     bottom: 35,
     flexDirection: "row",
     width: "100%",
+    height: 24,
+    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
+    //backgroundColor: "#B8DFA9",
   },
   dot: {
     width: 12,

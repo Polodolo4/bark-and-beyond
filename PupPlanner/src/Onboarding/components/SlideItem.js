@@ -29,11 +29,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    flex: 0.4,
+    flex: 0.5,
     width: "100%",
+    marginTop: 202,
   },
   content: {
     flex: 0.4,
+    width: 295,
+    height: 139,
     alignItems: "center",
   },
   title: {
@@ -43,7 +46,8 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    marginVertical: 12,
+    fontWeight: 400,
+    lineHeight: 24,
     color: "#333",
   },
 });
