@@ -12,6 +12,7 @@ import { firebase } from "../../../Firebase/firebase";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  //const [user, setUser] = useState("");
 
   function emailChange(value) {
     setEmail(value);
@@ -29,6 +30,18 @@ const Login = () => {
         console.log(userCredential);
       });
   }
+
+  const monitorAuthState = async () => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user);
+      } else {
+        console.log("You're not logged in");
+      }
+    });
+  };
+
+  monitorAuthState();
 
   return (
     <View style={styles.container}>

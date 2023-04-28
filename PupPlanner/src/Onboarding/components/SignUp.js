@@ -8,6 +8,16 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { firebase } from "../../../Firebase/firebase";
+import { GoogleAuthProvider } from "firebase/auth";
+import { provider } from "../../../Firebase/firebase";
+
+/*import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
+
+GoogleSignin.configure();*/
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -40,13 +50,45 @@ const SignUp = () => {
     } else {
       firebase
         .auth()
-        .createUserWithEmailAndPassword(email, password)
+        .createUserWithEmailAndPassword(email.trim(), password)
         .then(() => {})
         .catch((error) => {
           setErrorMessage(error.message);
         });
     }
   }
+
+  function createUserGmail() {
+    firebase
+      .auth()
+      .signInWithRedirect(provider)
+      .then((result) => {
+        const user = result.user;
+
+        alert(user.displayName);
+      })
+      .catch((error) => {
+        const errorCode = error.errorCode;
+        const errorMessage = error.message;
+
+        const email = error.email;
+
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorMessage);
+      });
+  }
+
+  const monitorAuthState = async () => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user);
+      } else {
+        console.log("You're not logged in");
+      }
+    });
+  };
+
+  monitorAuthState();
 
   return (
     <View style={styles.container}>
@@ -81,7 +123,10 @@ const SignUp = () => {
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.gmailButton}>
+      <TouchableOpacity
+        style={styles.gmailButton}
+        onPress={createUserGmail}
+      >
         <Text style={styles.externalText}>Continue with Gmail</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.appleButton}>
