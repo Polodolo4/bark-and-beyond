@@ -23,6 +23,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [borderRadius, setBorderRadius] = useState(0);
 
   function emailChange(value) {
     setEmail(value);
@@ -35,7 +36,7 @@ const SignUp = () => {
 
   function passwordChange(value) {
     setPassword(value);
-    if (value.length < 6) {
+    if (value.length > 0 && value.length < 6) {
       setErrorMessage("Password must be at least 6 characters long.");
     } else {
       setErrorMessage("");
@@ -152,7 +153,13 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    // backgroundColor: "#B8DFA9",
+    position: "absolute",
+    width: 393,
+    height: 673,
+    left: 0,
+    top: 179,
+    backgroundColor: "#B8DFA9",
+    borderRadius: "40px 40px 0 0",
   },
   email: {
     display: "flex",
@@ -248,5 +255,9 @@ const styles = StyleSheet.create({
   externalText: {
     fontSize: 16,
     fontWeight: "bold",
+  },
+  errorMessage: {
+    color: "red",
+    marginTop: 416,
   },
 });
