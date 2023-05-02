@@ -24,6 +24,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [borderRadius, setBorderRadius] = useState(0);
+  const [buttonDisabled, setButtonDisabled] = useState(true); // Add this state variable
 
   function emailChange(value) {
     setEmail(value);
@@ -46,15 +47,19 @@ const SignUp = () => {
   function createUser() {
     if (password.length < 6) {
       setErrorMessage("Password must be at least 6 characters long.");
+      setButtonDisabled(true); // Disable the button
     } else if (!validateEmail(email)) {
       setErrorMessage("Please enter a valid email address.");
+      setButtonDisabled(true); // Disable the button
     } else {
+      setButtonDisabled(false); // Enable the button
       firebase
         .auth()
         .createUserWithEmailAndPassword(email.trim(), password)
         .then(() => {})
         .catch((error) => {
           setErrorMessage(error.message);
+          setButtonDisabled(true); // Disable the button
         });
     }
   }
