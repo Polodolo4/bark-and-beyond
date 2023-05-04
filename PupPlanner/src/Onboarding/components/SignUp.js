@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { firebase } from "../../../Firebase/firebase";
 import { GoogleAuthProvider } from "firebase/auth";
 import { provider } from "../../../Firebase/firebase";
@@ -45,23 +45,25 @@ const SignUp = () => {
   }
 
   function createUser() {
-    if (password.length < 6) {
-      setErrorMessage("Password must be at least 6 characters long.");
-      setButtonDisabled(true); // Disable the button
-    } else if (!validateEmail(email)) {
-      setErrorMessage("Please enter a valid email address.");
-      setButtonDisabled(true); // Disable the button
+    let disabled = true;
+    if (password.length < 6 || !validateEmail(email)) {
+      if (password.length < 6) {
+        setErrorMessage("Password must be at least 6 characters long.");
+      } else {
+        setErrorMessage("Please enter a valid email address.");
+      }
     } else {
-      setButtonDisabled(false); // Enable the button
+      disabled = false;
       firebase
         .auth()
         .createUserWithEmailAndPassword(email.trim(), password)
         .then(() => {})
         .catch((error) => {
           setErrorMessage(error.message);
-          setButtonDisabled(true); // Disable the button
+          disabled = true;
         });
     }
+    setButtonDisabled(disabled);
   }
 
   function createUserGmail() {
@@ -84,17 +86,18 @@ const SignUp = () => {
       });
   }
 
-  const monitorAuthState = async () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user);
-      } else {
-        console.log("You're not logged in");
-      }
-    });
-  };
-
-  monitorAuthState();
+  useEffect(() => {
+    const monitorAuthState = async () => {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          console.log(user);
+        } else {
+          console.log("You're not logged in");
+        }
+      });
+    };
+    monitorAuthState();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -103,14 +106,14 @@ const SignUp = () => {
       <TextInput
         onChangeText={emailChange}
         value={email}
-        style={styles.email}
+        style={[styles.email, { backgroundColor: "white" }]}
         placeholder="Enter your email address"
         placeholderTextColor="#000"
       />
       <TextInput
         onChangeText={passwordChange}
         value={password}
-        style={styles.password}
+        style={[styles.password, { backgroundColor: "white" }]}
         placeholder="Enter your password"
         placeholderTextColor="#000"
         secureTextEntry={true}
@@ -122,9 +125,8 @@ const SignUp = () => {
 
       <TouchableOpacity
         style={styles.continueButton}
-        //onPress={() => console.log(firebase)}
         onPress={createUser}
-        //onPress={() => console.log(email, password)}
+        disabled={buttonDisabled}
       >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
@@ -149,22 +151,23 @@ export default SignUp;
 
 const styles = StyleSheet.create({
   header: {
-    //  fontFamily: "poppins",
     fontSize: 50,
-    fontWeight: 700,
+    fontWeight: "bold",
     lineHeight: 75,
-    marginTop: 106,
+    marginTop: 0, // add margin top to push it to the top of the screen
     textAlign: "center",
   },
   container: {
     alignItems: "center",
     position: "absolute",
-    width: 393,
+    width: 400,
     height: 673,
-    left: 0,
-    top: 179,
+    left: 5,
+    top: 70,
+    flex: 1,
     backgroundColor: "#B8DFA9",
-    borderRadius: "40px 40px 0 0",
+    borderRadius: 40,
+    //borderWidth: 5,
   },
   email: {
     display: "flex",
