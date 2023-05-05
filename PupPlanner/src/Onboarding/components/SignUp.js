@@ -100,7 +100,8 @@ const SignUp = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.backGreen}></SafeAreaView>
       <Text style={styles.header}>Sign Up</Text>
 
       <TextInput
@@ -126,24 +127,28 @@ const SignUp = () => {
       <TouchableOpacity
         style={styles.continueButton}
         onPress={createUser}
-        disabled={buttonDisabled}
+        //disabled={buttonDisabled}
       >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.gmailButton}
+        style={[styles.gmailButton, { backgroundColor: "white" }]}
         onPress={createUserGmail}
       >
         <Text style={styles.externalText}>Continue with Gmail</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.appleButton}>
+      <TouchableOpacity
+        style={[styles.appleButton, { backgroundColor: "white" }]}
+      >
         <Text style={styles.externalText}>Continue with Apple</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.facebookButton}>
+      <TouchableOpacity
+        style={[styles.facebookButton, { backgroundColor: "white" }]}
+      >
         <Text style={styles.externalText}>Continue with Facebook</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -153,21 +158,33 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 50,
     fontWeight: "bold",
+    position: "absolute",
     lineHeight: 75,
-    marginTop: 0, // add margin top to push it to the top of the screen
+    marginTop: 103, // add margin top to push it to the top of the screen
     textAlign: "center",
   },
   container: {
     alignItems: "center",
-    position: "absolute",
+    //position: "absolute",
     width: 400,
-    height: 673,
+    //height: 673,
     left: 5,
-    top: 70,
+    //  top: 103,
+    flex: 1,
+    // backgroundColor: "#B8DFA9",
+    // borderTopLeftRadius: 40,
+    //borderTopRightRadius: 40,
+    //  borderRadius: 40,
+    //borderWidth: 5,
+  },
+  backGreen: {
+    alignItems: "center",
+    width: 400,
+    top: 179,
     flex: 1,
     backgroundColor: "#B8DFA9",
-    borderRadius: 40,
-    //borderWidth: 5,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
   email: {
     display: "flex",
@@ -210,7 +227,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
     left: 41,
-    top: 550,
+    top: 576,
   },
   continueButton: {
     display: "flex",

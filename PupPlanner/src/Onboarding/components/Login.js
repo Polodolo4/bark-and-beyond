@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { firebase } from "../../../Firebase/firebase";
 
 const Login = () => {
@@ -31,39 +31,42 @@ const Login = () => {
       });
   }
 
-  const monitorAuthState = async () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user);
-      } else {
-        console.log("You're not logged in");
-      }
-    });
-  };
-
-  monitorAuthState();
+  useEffect(() => {
+    const monitorAuthState = async () => {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          console.log(user);
+        } else {
+          console.log("You're not logged in");
+        }
+      });
+    };
+    monitorAuthState();
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Login</Text>
+    <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.backGreen}></SafeAreaView>
+      <Text style={styles.header}>Log In</Text>
 
       <TextInput
         onChangeText={emailChange}
         value={email}
-        style={styles.email}
+        style={[styles.email, { backgroundColor: "white" }]}
         placeholder="Enter your email address"
         placeholderTextColor="#000"
       />
       <TextInput
         onChangeText={passwordChange}
         value={password}
-        style={styles.password}
+        style={[styles.password, { backgroundColor: "white" }]}
         placeholder="Enter your password"
         placeholderTextColor="#000"
         secureTextEntry={true}
       />
 
       <View style={styles.lineBreak}></View>
+
       <TouchableOpacity
         style={styles.continueButton}
         // onPress={() => console.log(firebase)}
@@ -72,16 +75,22 @@ const Login = () => {
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.gmailButton}>
+      <TouchableOpacity
+        style={[styles.gmailButton, { backgroundColor: "white" }]}
+      >
         <Text style={styles.externalText}>Continue with Gmail</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.appleButton}>
+      <TouchableOpacity
+        style={[styles.appleButton, { backgroundColor: "white" }]}
+      >
         <Text style={styles.externalText}>Continue with Apple</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.facebookButton}>
+      <TouchableOpacity
+        style={[styles.facebookButton, { backgroundColor: "white" }]}
+      >
         <Text style={styles.externalText}>Continue with Facebook</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -91,14 +100,27 @@ const styles = StyleSheet.create({
   header: {
     //  fontFamily: "poppins",
     fontSize: 50,
-    fontWeight: 700,
+    fontWeight: "bold",
+    position: "absolute",
     lineHeight: 75,
-    marginTop: 106,
+    marginTop: 103,
     textAlign: "center",
   },
   container: {
     alignItems: "center",
+    width: 400,
+    left: 5,
+    flex: 1,
     // backgroundColor: "#B8DFA9",
+  },
+  backGreen: {
+    alignItems: "center",
+    width: 400,
+    top: 179,
+    flex: 1,
+    backgroundColor: "#B8DFA9",
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
   email: {
     display: "flex",
