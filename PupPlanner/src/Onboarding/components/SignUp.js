@@ -10,6 +10,7 @@ import React, { useState, useEffect } from "react";
 import { firebase } from "../../../Firebase/firebase";
 import { GoogleAuthProvider } from "firebase/auth";
 import { provider } from "../../../Firebase/firebase";
+import { useNavigation } from "@react-navigation/native";
 
 /*import {
   GoogleSignin,
@@ -25,6 +26,8 @@ const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [borderRadius, setBorderRadius] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(true); // Add this state variable
+
+  const navigation = useNavigation();
 
   function emailChange(value) {
     setEmail(value);
@@ -66,7 +69,7 @@ const SignUp = () => {
     setButtonDisabled(disabled);
   }
 
-  function createUserGmail() {
+  /*function createUserGmail() {
     firebase
       .auth()
       .signInWithRedirect(provider)
@@ -84,7 +87,12 @@ const SignUp = () => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         console.log(errorMessage);
       });
-  }
+  }*/
+
+  const onPressCombo = () => {
+    createUser();
+    navigation.navigate("CreateProfile");
+  };
 
   useEffect(() => {
     const monitorAuthState = async () => {
@@ -126,7 +134,9 @@ const SignUp = () => {
 
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={createUser}
+        //  onPress={createUser}
+        //onPress={() => navigation.navigate("CreateProfile")}
+        onPress={onPressCombo}
         //disabled={buttonDisabled}
       >
         <Text style={styles.continueText}>Continue</Text>
@@ -134,7 +144,7 @@ const SignUp = () => {
 
       <TouchableOpacity
         style={[styles.gmailButton, { backgroundColor: "white" }]}
-        onPress={createUserGmail}
+        //   onPress={createUserGmail}
       >
         <Text style={styles.externalText}>Continue with Gmail</Text>
       </TouchableOpacity>
