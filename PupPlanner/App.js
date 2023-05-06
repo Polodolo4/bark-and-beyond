@@ -9,6 +9,7 @@ import Slider from "./src/Onboarding/components/Slider";
 import SignUp from "./src/Onboarding/components/SignUp";
 import Login from "./src/Onboarding/components/Login";
 import CreateProfile from "./src/Onboarding/components/CreateProfile";
+import CreateDogProfile from "./src/Onboarding/components/CreateDogProfile";
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,10 @@ const App = () => {
         <Stack.Screen
           name="CreateProfile"
           component={CreateProfile}
+        />
+        <Stack.Screen
+          name="CreateDogProfile"
+          component={CreateDogProfile}
         />
       </Stack.Navigator>
     </NavigationContainer>
