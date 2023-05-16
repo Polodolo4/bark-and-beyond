@@ -6,9 +6,14 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  Dimensions,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+
+const { width, height } = Dimensions.get("screen");
 
 const CreateProfile = () => {
   const navigation = useNavigation();
@@ -29,13 +34,13 @@ const CreateProfile = () => {
       <Text style={styles.contact}>How can we contact you?</Text>
 
       <TextInput
-        style={[styles.nameBox, { backgroundColor: "white" }]}
+        style={[styles.textBox, styles.nameBox, { backgroundColor: "white" }]}
         placeholder="Enter your full name"
         placeholderTextColor="#000"
       />
 
       <TextInput
-        style={[styles.phoneBox, { backgroundColor: "white" }]}
+        style={[styles.textBox, styles.phoneBox, { backgroundColor: "white" }]}
         placeholder="Enter your phone number"
         placeholderTextColor="#000"
       />
@@ -55,6 +60,14 @@ const CreateProfile = () => {
 export default CreateProfile;
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    width,
+    height,
+    left: 5,
+    flex: 1,
+    // backgroundColor: "#B8DFA9",
+  },
   header: {
     //  fontFamily: "poppins",
     fontSize: 50,
@@ -63,13 +76,6 @@ const styles = StyleSheet.create({
     lineHeight: 75,
     marginTop: 103,
     textAlign: "center",
-  },
-  container: {
-    alignItems: "center",
-    width: 400,
-    left: 5,
-    flex: 1,
-    // backgroundColor: "#B8DFA9",
   },
   backGreen: {
     alignItems: "center",
@@ -86,35 +92,30 @@ const styles = StyleSheet.create({
     left: 24,
     top: 386,
   },
-  nameBox: {
+  textBox: {
     fontSize: 16,
     fontWeight: "bold",
-    padding: 0,
-    gap: 6,
-    position: "absolute",
     width: 345,
     height: 48,
     borderWidth: 1,
     borderRadius: 10,
+    color: "#333",
+  },
+  nameBox: {
+    padding: 0,
+    gap: 6,
+    position: "absolute",
     top: 442,
     paddingLeft: 15,
     left: 24,
-    color: "#333",
   },
   phoneBox: {
-    fontSize: 16,
-    fontWeight: "bold",
     padding: 0,
     gap: 6,
     position: "absolute",
-    width: 345,
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 10,
     top: 536,
     paddingLeft: 15,
     left: 24,
-    color: "#333",
   },
   continueButton: {
     display: "flex",

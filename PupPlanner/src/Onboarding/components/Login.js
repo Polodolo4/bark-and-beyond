@@ -8,10 +8,12 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase } from "../../../Firebase/firebase";
+import { useNavigation } from "@react-navigation/native";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigation();
   //const [user, setUser] = useState("");
 
   function emailChange(value) {
@@ -70,7 +72,8 @@ const Login = () => {
       <TouchableOpacity
         style={styles.continueButton}
         // onPress={() => console.log(firebase)}
-        onPress={loginUser}
+        //onPress={loginUser}
+        onPress={() => navigation.navigate("CreateDogProfile")}
       >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>

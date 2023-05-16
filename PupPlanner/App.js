@@ -1,6 +1,8 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, ScrollView } from "react-native";
 import React from "react";
 import "react-native-gesture-handler";
+
+import "expo-dev-client";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
