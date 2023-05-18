@@ -13,6 +13,10 @@ import Login from "./src/Onboarding/components/Login";
 import CreateProfile from "./src/Onboarding/components/CreateProfile";
 import CreateDogProfile from "./src/Onboarding/components/CreateDogProfile";
 
+// keep or remove this?
+/* import { enableScreens } from "react-native-screens";
+enableScreens(); */
+
 const Stack = createStackNavigator();
 
 const App = () => {

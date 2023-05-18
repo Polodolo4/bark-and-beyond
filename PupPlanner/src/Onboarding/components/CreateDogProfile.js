@@ -11,6 +11,26 @@ import {
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
+const InputField = ({
+  value,
+  onChangeText,
+  label,
+  placeholder,
+  secureTextEntry = false,
+}) => (
+  <View style={styles.inputContainer}>
+    <Text style={styles.inputLabel}>{label}</Text>
+    <TextInput
+      onChangeText={onChangeText}
+      value={value}
+      style={styles.input}
+      placeholder={placeholder}
+      placeholderTextColor="#000"
+      secureTextEntry={secureTextEntry}
+    />
+  </View>
+);
+
 const CreateDogProfile = () => {
   const navigation = useNavigation();
 
