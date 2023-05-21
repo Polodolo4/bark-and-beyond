@@ -42,7 +42,7 @@ const InputField = ({
 const ErrorText = ({ error }) => <Text style={styles.error}>{error}</Text>;
 
 const SocialButton = ({ logo, text }) => (
-  <TouchableOpacity style={[styles.button, styles.socialButton]}>
+  <TouchableOpacity style={styles.socialButton}>
     <View style={styles.buttonContent}>
       <View style={styles.logoContainer}>
         <Image
@@ -170,15 +170,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
     width: "100%",
-    paddingTop: 50,
   },
   header: {
     fontSize: 50,
     fontWeight: "bold",
     color: "black",
     textAlign: "center",
-    marginBottom: 40,
-    marginTop: 20,
+    marginTop: 106,
   },
   backGreen: {
     flex: 1,
@@ -187,20 +185,19 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     alignItems: "center",
-    paddingTop: 20,
+    paddingTop: 49,
   },
   inputContainer: {
     width: "90%",
-    marginBottom: 20,
   },
   inputLabel: {
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 6,
     fontWeight: "bold",
+    marginTop: 24,
   },
   input: {
     height: 48,
-    borderColor: "gray",
     borderWidth: 1,
     borderRadius: 10,
     padding: 12,
@@ -212,16 +209,17 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "black",
     width: "90%",
-    marginVertical: 20,
+    marginVertical: 48,
   },
   continueButton: {
     backgroundColor: "#323841",
     height: 48,
-    width: 183,
+    width: "45%",
     borderRadius: 30,
     justifyContent: "center",
     alignSelf: "center",
     alignItems: "center",
+    marginTop: 38,
   },
   disabledButton: {
     backgroundColor: "gray",
@@ -236,6 +234,8 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderColor: "#323841",
     width: "90%",
     height: 48,
     borderRadius: 30,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     paddingLeft: 15,
-    marginVertical: 10,
+    marginVertical: 8,
   },
   buttonContent: {
     flexDirection: "row",

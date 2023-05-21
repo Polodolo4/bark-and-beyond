@@ -146,6 +146,13 @@ const CreateDogProfile = () => {
 export default CreateDogProfile;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "100%",
+    backgroundColor: "#B8DFA9",
+  },
   header: {
     //  fontFamily: "poppins",
     fontSize: 50,
@@ -153,13 +160,6 @@ const styles = StyleSheet.create({
     lineHeight: 75,
     marginTop: 103,
     textAlign: "center",
-  },
-  container: {
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "100%",
-    flex: 1,
-    backgroundColor: "#B8DFA9",
   },
   tellUs: {
     fontWeight: "700",
@@ -170,7 +170,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "90%",
-    marginBottom: 20,
   },
   firstInputLabel: {
     fontSize: 16,

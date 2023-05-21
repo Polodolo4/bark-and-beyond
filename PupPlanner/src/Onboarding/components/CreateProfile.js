@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  ScrollView,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -57,9 +56,26 @@ const SubInputField = ({
 
 const CreateProfile = () => {
   const [name, setName] = useState("");
+  const nameRef = firebase.firestore().collection("humanNames");
   const [phone, setPhone] = useState("");
 
   const navigation = useNavigation();
+
+  /* // fetch or read the data from firestore
+  useEffect(() => {
+    nameRef.orderBy("createdAt", "desc").onSnapshot((querySnapshot) => {
+      const setName = "";
+      querySnapshot.forEach((doc) => {
+        const { heading } = doc.data();
+        name.push({
+          id: doc.id,
+          heading,
+        });
+      });
+      setName(name);
+      //console.log(users)
+    });
+  }, []);*/
 
   const handleNameChange = (value) => {
     setName(value);
@@ -68,6 +84,25 @@ const CreateProfile = () => {
   const handlePhoneChange = (value) => {
     setPhone(value);
   };
+
+  /*//add name to database
+  const addName = () => {
+    if (name && name.length > 0) {
+      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+      const name = {
+        heading: setName,
+        createdAt: timestamp,
+      };
+      nameRef
+        .add(name)
+        .then(() => {
+          setName("");
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    }
+  };*/
 
   return (
     <KeyboardAwareScrollView>
@@ -98,8 +133,8 @@ const CreateProfile = () => {
         <TouchableOpacity
           style={styles.continueButton}
           // onPress={() => console.log(firebase)}
-          //onPress={loginUser}
           onPress={() => navigation.navigate("CreateDogProfile")}
+          // onPress={addName}
         >
           <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
@@ -115,6 +150,13 @@ const CreateProfile = () => {
 export default CreateProfile;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "100%",
+    backgroundColor: "#B8DFA9",
+  },
   header: {
     //  fontFamily: "poppins",
     fontSize: 50,
@@ -122,13 +164,6 @@ const styles = StyleSheet.create({
     lineHeight: 75,
     marginTop: 103,
     textAlign: "center",
-  },
-  container: {
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "100%",
-    flex: 1,
-    backgroundColor: "#B8DFA9",
   },
   contact: {
     fontWeight: "700",
@@ -139,17 +174,16 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "90%",
-    marginBottom: 20,
   },
   firstInputLabel: {
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 6,
     marginTop: 32,
     fontWeight: "bold",
   },
   subInputLabel: {
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 6,
     marginTop: 16,
     fontWeight: "bold",
   },
