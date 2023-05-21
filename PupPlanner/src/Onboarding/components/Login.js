@@ -101,8 +101,6 @@ const Login = () => {
     <KeyboardAwareScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Log In</Text>
       <View style={styles.backGreen}>
-        <SafeAreaView />
-
         <InputField
           value={email}
           onChangeText={handleEmailChange}
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   header: {
-    fontSize: 30,
+    fontSize: 50,
     fontWeight: "bold",
     color: "black",
     textAlign: "center",
@@ -207,6 +205,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     backgroundColor: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   lineBreak: {
     height: 1,
