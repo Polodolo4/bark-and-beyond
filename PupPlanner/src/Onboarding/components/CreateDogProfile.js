@@ -13,7 +13,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const FirstInputField = ({
+const InputField = ({
   value,
   onChangeText,
   label,
@@ -21,27 +21,7 @@ const FirstInputField = ({
   secureTextEntry = false,
 }) => (
   <View style={styles.inputContainer}>
-    <Text style={styles.firstInputLabel}>{label}</Text>
-    <TextInput
-      onChangeText={onChangeText}
-      value={value}
-      style={styles.input}
-      placeholder={placeholder}
-      placeholderTextColor="#000"
-      secureTextEntry={secureTextEntry}
-    />
-  </View>
-);
-
-const SubInputField = ({
-  value,
-  onChangeText,
-  label,
-  placeholder,
-  secureTextEntry = false,
-}) => (
-  <View style={styles.inputContainer}>
-    <Text style={styles.subInputLabel}>{label}</Text>
+    <Text style={styles.inputLabel}>{label}</Text>
     <TextInput
       onChangeText={onChangeText}
       value={value}
@@ -95,31 +75,31 @@ const CreateDogProfile = () => {
 
         <Text style={styles.tellUs}>Tell us about your pup</Text>
 
-        <FirstInputField
+        <InputField
           value={name}
           onChangeText={handleNameChange}
           label="Pup's name"
           placeholder="Enter pup's name"
         />
-        <SubInputField
+        <InputField
           value={age}
           onChangeText={handleAgeChange}
           label="Pup's age"
           placeholder="How old is your pup"
         />
-        <SubInputField
+        <InputField
           value={weight}
           onChangeText={handleWeightChange}
           label="Pup's weight"
           placeholder="Enter weight in lbs"
         />
-        <SubInputField
+        <InputField
           value={breed}
           onChangeText={handleBreedChange}
           label="Breed"
           placeholder="Enter your pup's breed"
         />
-        <SubInputField
+        <InputField
           value={notes}
           onChangeText={handleNotesChange}
           label="Notes for pup"
@@ -166,18 +146,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginTop: 40,
+    marginBottom: 16,
     marginRight: 215,
   },
   inputContainer: {
     width: "90%",
   },
-  firstInputLabel: {
-    fontSize: 16,
-    marginBottom: 5,
-    marginTop: 32,
-    fontWeight: "bold",
-  },
-  subInputLabel: {
+  inputLabel: {
     fontSize: 16,
     marginBottom: 5,
     marginTop: 16,

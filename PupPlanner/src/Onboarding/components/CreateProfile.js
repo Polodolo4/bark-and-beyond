@@ -14,7 +14,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 import { firebase } from "../../../Firebase/firebase";
 
-const FirstInputField = ({
+const InputField = ({
   value,
   onChangeText,
   label,
@@ -22,27 +22,7 @@ const FirstInputField = ({
   secureTextEntry = false,
 }) => (
   <View style={styles.inputContainer}>
-    <Text style={styles.firstInputLabel}>{label}</Text>
-    <TextInput
-      onChangeText={onChangeText}
-      value={value}
-      style={styles.input}
-      placeholder={placeholder}
-      placeholderTextColor="#000"
-      secureTextEntry={secureTextEntry}
-    />
-  </View>
-);
-
-const SubInputField = ({
-  value,
-  onChangeText,
-  label,
-  placeholder,
-  secureTextEntry = false,
-}) => (
-  <View style={styles.inputContainer}>
-    <Text style={styles.subInputLabel}>{label}</Text>
+    <Text style={styles.inputLabel}>{label}</Text>
     <TextInput
       onChangeText={onChangeText}
       value={value}
@@ -117,13 +97,13 @@ const CreateProfile = () => {
 
         <Text style={styles.contact}>How can we contact you?</Text>
 
-        <FirstInputField
+        <InputField
           value={name}
           onChangeText={handleNameChange}
           label="Your name"
           placeholder="Enter your full name"
         />
-        <SubInputField
+        <InputField
           value={phone}
           onChangeText={handlePhoneChange}
           label="Phone number"
@@ -139,7 +119,7 @@ const CreateProfile = () => {
           <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate("CreateProfile")}>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
           <Text style={styles.goBack}>Go Back</Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -170,18 +150,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginTop: 40,
+    marginBottom: 16,
     marginRight: 190,
   },
   inputContainer: {
     width: "90%",
   },
-  firstInputLabel: {
-    fontSize: 16,
-    marginBottom: 6,
-    marginTop: 32,
-    fontWeight: "bold",
-  },
-  subInputLabel: {
+  inputLabel: {
     fontSize: 16,
     marginBottom: 6,
     marginTop: 16,
@@ -189,7 +164,6 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 48,
-    borderColor: "#333",
     borderWidth: 1,
     borderRadius: 10,
     padding: 12,
