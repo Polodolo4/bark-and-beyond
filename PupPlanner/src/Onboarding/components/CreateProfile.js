@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -36,26 +36,10 @@ const InputField = ({
 
 const CreateProfile = () => {
   const [name, setName] = useState("");
-  const nameRef = firebase.firestore().collection("humanNames");
   const [phone, setPhone] = useState("");
+  const humanRef = firebase.firestore().collection("humanProfiles");
 
   const navigation = useNavigation();
-
-  /* // fetch or read the data from firestore
-  useEffect(() => {
-    nameRef.orderBy("createdAt", "desc").onSnapshot((querySnapshot) => {
-      const setName = "";
-      querySnapshot.forEach((doc) => {
-        const { heading } = doc.data();
-        name.push({
-          id: doc.id,
-          heading,
-        });
-      });
-      setName(name);
-      //console.log(users)
-    });
-  }, []);*/
 
   const handleNameChange = (value) => {
     setName(value);
@@ -65,24 +49,29 @@ const CreateProfile = () => {
     setPhone(value);
   };
 
-  /*//add name to database
-  const addName = () => {
-    if (name && name.length > 0) {
-      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-      const name = {
-        heading: setName,
-        createdAt: timestamp,
-      };
-      nameRef
-        .add(name)
-        .then(() => {
-          setName("");
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    }
-  };*/
+  //add human to humanProfiles collection
+  const addHuman = () => {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const data = {
+      ownerName: name,
+      phoneNumber: phone,
+      createdAt: timestamp,
+    };
+    humanRef
+      .add(data)
+      .then(() => {
+        setName("");
+        setPhone("");
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
+  const createAndMoveScreens = () => {
+    addHuman();
+    navigation.navigate("CreateDogProfile");
+  };
 
   return (
     <KeyboardAwareScrollView>
@@ -113,8 +102,9 @@ const CreateProfile = () => {
         <TouchableOpacity
           style={styles.continueButton}
           // onPress={() => console.log(firebase)}
-          onPress={() => navigation.navigate("CreateDogProfile")}
-          // onPress={addName}
+          // onPress={() => navigation.navigate("CreateDogProfile")}
+          //  onPress={addName}
+          onPress={createAndMoveScreens}
         >
           <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
