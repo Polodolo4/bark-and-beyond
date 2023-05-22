@@ -7,11 +7,12 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  ScrollView,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+import { firebase } from "../../../Firebase/firebase";
 
 const InputField = ({
   value,
@@ -39,6 +40,7 @@ const CreateDogProfile = () => {
   const [weight, setWeight] = useState("");
   const [breed, setBreed] = useState("");
   const [notes, setNotes] = useState("");
+  const dogRef = firebase.firestore().collection("dogProfiles");
 
   const navigation = useNavigation();
 
@@ -59,7 +61,37 @@ const CreateDogProfile = () => {
   };
 
   const handleNotesChange = (value) => {
-    setBreed(value);
+    setNotes(value);
+  };
+
+  //add human to humanProfiles collection
+  const addDog = () => {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const data = {
+      petName: name,
+      petAge: age,
+      weight: weight,
+      breed: breed,
+      specialNotes: notes,
+      createdAt: timestamp,
+    };
+    dogRef
+      .add(data)
+      .then(() => {
+        setName("");
+        setAge("");
+        setWeight("");
+        setBreed("");
+        setNotes("");
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
+  const createAndMoveScreens = () => {
+    addDog();
+    navigation.navigate("CreateDogProfile");
   };
 
   return (
@@ -109,8 +141,7 @@ const CreateDogProfile = () => {
         <TouchableOpacity
           style={styles.continueButton}
           // onPress={() => console.log(firebase)}
-          //onPress={loginUser}
-          onPress={() => navigation.navigate("CreateProfile")}
+          onPress={createAndMoveScreens}
         >
           <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
