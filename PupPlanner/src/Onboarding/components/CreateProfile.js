@@ -105,15 +105,15 @@ const CreateProfile = () => {
           style={styles.photoButton}
           onPress={pickImage}
         >
-          {image && (
+          {!image && (
             <Image
-              source={{ uri: image }}
-              style={{ width: 200, height: 200 }}
+              style={styles.photoImage}
+              source={require("../assets/add-photo.png")}
             />
           )}
           <Image
-            style={styles.photoImage}
-            source={require("../assets/add-photo.png")}
+            source={{ uri: image }}
+            style={{ width: "100%", height: "100%", borderRadius: 100 }}
           />
         </TouchableOpacity>
 
@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
     height: 144,
     width: 144,
     marginTop: 24,
+    alignContent: "center",
   },
   goBack: {
     fontWeight: "700",

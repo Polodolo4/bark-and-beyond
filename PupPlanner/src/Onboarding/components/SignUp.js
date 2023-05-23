@@ -7,14 +7,17 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { firebase } from "../../../Firebase/firebase";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const isEmailValid = (value) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(value);
+  return re.test(value.trim());
 };
 
 const isPasswordValid = (value) => value.length >= 6;
@@ -25,17 +28,64 @@ const InputField = ({
   label,
   placeholder,
   secureTextEntry = false,
+  toggleSecureEntry,
+  status,
+  onFocus,
+  onBlur,
+  errorMessage,
 }) => (
   <View style={styles.inputContainer}>
     <Text style={styles.inputLabel}>{label}</Text>
-    <TextInput
-      onChangeText={onChangeText}
-      value={value}
-      style={styles.input}
-      placeholder={placeholder}
-      placeholderTextColor="#000"
-      secureTextEntry={secureTextEntry}
-    />
+    <View
+      style={[
+        styles.inputWrapper,
+        status === "valid"
+          ? styles.valid
+          : status === "error"
+          ? styles.error
+          : null,
+      ]}
+    >
+      <TextInput
+        onChangeText={onChangeText}
+        value={value}
+        style={styles.input}
+        placeholder={placeholder}
+        placeholderTextColor="#000"
+        secureTextEntry={secureTextEntry}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+      {status === "valid" && (
+        <Icon
+          name="check"
+          size={20}
+          color="green"
+        />
+      )}
+      {status === "error" && (
+        <Icon
+          name="times-circle"
+          size={20}
+          color="red"
+        />
+      )}
+      {secureTextEntry && (
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={toggleSecureEntry}
+        >
+          <MaterialCommunityIcons
+            name={secureTextEntry ? "eye" : "eye-off"}
+            color="gray"
+            size={20}
+          />
+        </TouchableOpacity>
+      )}
+      {status === "error" && (
+        <Text style={styles.errorMessage}>{errorMessage}</Text>
+      )}
+    </View>
   </View>
 );
 
@@ -61,28 +111,78 @@ const SignUp = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [secureEntry, setSecureEntry] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+  const [emailStatus, setEmailStatus] = useState("");
+  const [passwordStatus, setPasswordStatus] = useState("");
+  const [emailFocus, setEmailFocus] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
 
   const handleEmailChange = (value) => {
-    setEmail(value.trim());
+    setEmail(value);
     setEmailError("");
     setErrorMessage("");
+    if (!emailFocus) {
+      validateEmail(value);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    setEmailFocus(false);
+    validateEmail(email);
+  };
+
+  const handleEmailFocus = () => {
+    setEmailFocus(true);
+    setEmailStatus("");
+  };
+
+  const validateEmail = (value) => {
+    if (!isEmailValid(value)) {
+      setEmailError("Please enter a valid email address.");
+      setEmailStatus("error");
+    } else {
+      setEmailError("");
+      setEmailStatus("valid");
+    }
   };
 
   const handlePasswordChange = (value) => {
     setPassword(value);
     setPasswordError("");
     setErrorMessage("");
+    if (!passwordFocus) {
+      validatePassword(value);
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    setPasswordFocus(false);
+    validatePassword(password);
+  };
+
+  const handlePasswordFocus = () => {
+    setPasswordFocus(true);
+    setPasswordStatus("");
+  };
+
+  const validatePassword = (value) => {
+    if (!isPasswordValid(value)) {
+      setPasswordError("Please enter a password with at least 6 characters.");
+      setPasswordStatus("error");
+    } else {
+      setPasswordError("");
+      setPasswordStatus("valid");
+    }
   };
 
   const handleCreateUser = () => {
-    if (!isEmailValid(email)) {
-      setEmailError("Please enter a valid email address.");
-      return;
-    }
+    setLoading(true);
 
-    if (!isPasswordValid(password)) {
-      setPasswordError("Please enter a password with at least 6 characters.");
+    // validate input before creating user
+    if (!isEmailValid(email) || !isPasswordValid(password)) {
+      setLoading(false);
       return;
     }
 
@@ -90,10 +190,11 @@ const SignUp = () => {
       .auth()
       .createUserWithEmailAndPassword(email.trim(), password)
       .then(() => {
-        console.log("User created successfully");
+        setLoading(false);
         navigation.navigate("CreateProfile");
       })
       .catch((error) => {
+        setLoading(false);
         setErrorMessage(error.message);
       });
   };
@@ -116,65 +217,75 @@ const SignUp = () => {
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Sign Up</Text>
-      <View style={styles.backGreen}>
-        <SafeAreaView />
 
-        <InputField
-          value={email}
-          onChangeText={handleEmailChange}
-          label="Email"
-          placeholder="Enter your email address"
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color="#0000ff"
         />
+      ) : (
+        <View style={styles.backGreen}>
+          <InputField
+            label="Email"
+            placeholder="Enter your email address"
+            value={email}
+            onChangeText={handleEmailChange}
+            onFocus={handleEmailFocus}
+            onBlur={handleEmailBlur}
+            status={emailFocus ? "" : emailStatus}
+          />
+          {emailError && <ErrorText error={emailError} />}
+          <InputField
+            label="Password"
+            placeholder="Enter your password"
+            secureTextEntry={secureEntry}
+            toggleSecureEntry={() => setSecureEntry(!secureEntry)}
+            value={password}
+            onChangeText={handlePasswordChange}
+            onFocus={handlePasswordFocus}
+            onBlur={handlePasswordBlur}
+            status={passwordFocus ? "" : passwordStatus}
+          />
+          {passwordError && <ErrorText error={passwordError} />}
 
-        {emailError && <ErrorText error={emailError} />}
+          {errorMessage && (
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
+          )}
 
-        <InputField
-          value={password}
-          onChangeText={handlePasswordChange}
-          label="Password"
-          placeholder="Enter your password"
-          secureTextEntry={true}
-        />
-
-        {passwordError && <ErrorText error={passwordError} />}
-
-        {errorMessage && (
-          <Text style={styles.errorMessage}>{errorMessage}</Text>
-        )}
-
-        <TouchableOpacity
-          style={[
-            styles.continueButton,
-            isButtonDisabled && styles.disabledButton,
-          ]}
-          onPress={handleCreateUser}
-          disabled={isButtonDisabled}
-        >
-          <Text
+          <TouchableOpacity
             style={[
-              styles.buttonText,
-              isButtonDisabled && styles.disabledButtonText,
+              styles.continueButton,
+              isButtonDisabled && styles.disabledButton,
             ]}
+            onPress={handleCreateUser}
+            disabled={isButtonDisabled}
           >
-            Continue
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                styles.buttonText,
+                isButtonDisabled && styles.disabledButtonText,
+              ]}
+            >
+              Continue
+            </Text>
+          </TouchableOpacity>
 
-        <View style={styles.lineBreak}></View>
+          <View style={styles.lineBreak}></View>
 
-        <SocialButton
-          logo={require("../assets/gmail_logo.png")}
-          text="Continue with Gmail"
-        />
-        <SocialButton
-          logo={require("../assets/apple_logo.png")}
-          text="Continue with Apple"
-        />
-        <SocialButton
-          logo={require("../assets/facebook_logo.png")}
-          text="Continue with Facebook"
-        />
-      </View>
+          <SocialButton
+            logo={require("../assets/gmail_logo.png")}
+            text="Continue with Gmail"
+          />
+          <SocialButton
+            logo={require("../assets/apple_logo.png")}
+            text="Continue with Apple"
+          />
+          <SocialButton
+            logo={require("../assets/facebook_logo.png")}
+            text="Continue with Facebook"
+          />
+        </View>
+      )}
     </KeyboardAwareScrollView>
   );
 };
@@ -207,6 +318,15 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "90%",
   },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 12,
+    backgroundColor: "#FFF",
+    position: "relative",
+  },
   inputLabel: {
     fontSize: 16,
     marginBottom: 6,
@@ -214,13 +334,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   input: {
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-    backgroundColor: "#FFF",
+    flex: 1,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  icon: {
+    marginLeft: 10,
   },
   lineBreak: {
     height: 1,
@@ -283,13 +402,40 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 10,
   },
-  error: {
-    color: "red",
-    marginTop: 8,
-    marginBottom: 8,
-  },
   errorMessage: {
+    position: "absolute",
     color: "red",
-    marginTop: 10,
+    fontSize: 12,
+    bottom: -20,
+    left: 0,
+    right: 0,
+    textAlign: "center",
+  },
+  valid: {
+    shadowColor: "#88C6E7",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  error: {
+    shadowColor: "#BB0C0C",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+  active: {
+    shadowColor: "#88C6E7",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
