@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const DropdownMenu = ({ navigation }) => {
@@ -37,14 +37,25 @@ const NavBar = ({ navigation }) => {
   return (
     <View style={styles.navbar}>
       <TouchableOpacity onPress={handleMenuClick}>
-        <MaterialIcons name="menu" size={24} color="black" />
+        <MaterialIcons
+          name="menu"
+          size={24}
+          color="black"
+        />
       </TouchableOpacity>
       {isMenuVisible && (
-        <DropdownMenu navigation={navigation} style={styles.dropdownMenu} />
+        <DropdownMenu
+          navigation={navigation}
+          style={styles.dropdownMenu}
+        />
       )}
-      <Text style={styles.navbarText}>Bark and Beyond</Text>
+      <Image source={require("../assets/gray_logo.png")}></Image>
       <TouchableOpacity onPress={() => navigation.navigate("Search")}>
-        <MaterialIcons name="search" size={24} color="black" />
+        <MaterialIcons
+          name="search"
+          size={24}
+          color="black"
+        />
       </TouchableOpacity>
     </View>
   );

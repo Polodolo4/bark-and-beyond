@@ -49,21 +49,45 @@ const CreateDogProfile = () => {
   const navigation = useNavigation();
 
   const pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (status === "granted") {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+      return;
+    }
 
-      console.log(result);
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      }
+    if (!result.canceled) {
+      setImage(result.uri);
+    }
+  };
+
+  const uploadImage = async () => {
+    try {
+      if (!image) return null;
+
+      const response = await fetch(image);
+
+      const blob = await response.blob();
+
+      const timestamp = Date.now();
+      const filename = `Image${timestamp};`;
+      const ref = firebase.storage().ref().child(`dogPictures/${filename}`);
+
+      const snapshot = await ref.put(blob);
+
+      const downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (error) {
+      console.log("Error in uploadImage function: ", error);
+      throw error;
     }
   };
 
@@ -87,8 +111,15 @@ const CreateDogProfile = () => {
     setNotes(value);
   };
 
-  //add human to humanProfiles collection
-  const addDog = () => {
+  //add human to dogProfiles collection
+  const addDog = async () => {
+    const imageUrl = await uploadImage();
+
+    if (!imageUrl) {
+      console.log("Failed to upload image");
+      return;
+    }
+
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       petName: name,
@@ -97,6 +128,7 @@ const CreateDogProfile = () => {
       breed: breed,
       specialNotes: notes,
       createdAt: timestamp,
+      imageURL: imageUrl,
     };
     dogRef
       .add(data)
@@ -112,9 +144,9 @@ const CreateDogProfile = () => {
       });
   };
 
-  const createAndMoveScreens = () => {
+  const createAndMoveToDashboard = () => {
     addDog();
-    navigation.navigate("CreateDogProfile");
+    navigation.navigate("Dashboard");
   };
 
   return (
@@ -126,16 +158,17 @@ const CreateDogProfile = () => {
           style={styles.photoButton}
           onPress={pickImage}
         >
-          {!image && (
+          {image ? (
+            <Image
+              source={{ uri: image }}
+              style={{ width: "100%", height: "100%", borderRadius: 100 }}
+            />
+          ) : (
             <Image
               style={styles.photoImage}
               source={require("../assets/add-photo.png")}
             />
           )}
-          <Image
-            source={{ uri: image }}
-            style={{ width: "100%", height: "100%", borderRadius: 100 }}
-          />
         </TouchableOpacity>
 
         <Text style={styles.tellUs}>Tell us about your pup</Text>
@@ -173,8 +206,7 @@ const CreateDogProfile = () => {
 
         <TouchableOpacity
           style={styles.continueButton}
-          // onPress={() => console.log(firebase)}
-          onPress={createAndMoveScreens}
+          onPress={createAndMoveToDashboard}
         >
           <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
