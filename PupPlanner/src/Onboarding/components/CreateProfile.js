@@ -10,21 +10,12 @@ import {
 } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
-//import * as Permissions from "expo-permissions";
-//import { utils } from "@react-native-firebase/app";
-//import { connectActionSheet } from "@expo/react-native-action-sheet";
-
-//import { Platform } from "react-native";
-//import * as FileSystem from "expo-file-system";
-
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { firebase } from "../../../Firebase/firebase";
 import "firebase/storage";
 import "firebase/firestore";
-//import AsyncStorage from "@react-native-async-storage/async-storage";
-//import storage from "@react-native-firebase/storage";
 
 const InputField = ({
   value,
@@ -69,7 +60,7 @@ const CreateProfile = () => {
       quality: 1,
     });
 
-    if (!result.canceled) {
+    if (!result.cancelled) {
       setImage(result.uri);
     }
   };
@@ -79,7 +70,6 @@ const CreateProfile = () => {
       if (!image) return null;
 
       const response = await fetch(image);
-
       const blob = await response.blob();
 
       const timestamp = Date.now();
@@ -87,7 +77,6 @@ const CreateProfile = () => {
       const ref = firebase.storage().ref().child(`humanPictures/${filename}`);
 
       const snapshot = await ref.put(blob);
-
       const downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
@@ -113,28 +102,43 @@ const CreateProfile = () => {
       return;
     }
 
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const data = {
-      ownerName: name,
-      phoneNumber: phone,
-      createdAt: timestamp,
-      imageURL: imageUrl,
-    };
-    humanRef
-      .add(data)
-      .then(() => {
-        setName("");
-        setPhone("");
-        setImage(null);
-      })
-      .catch((error) => {
-        alert(error);
-      });
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      const documentRef = firebase
+        .firestore()
+        .collection("usersCollection")
+        .doc(user.uid);
+      const documentSnapshot = await documentRef.get();
+
+      if (documentSnapshot.exists) {
+        await documentRef.update({
+          displayName: name,
+        });
+      } else {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const data = {
+          ownerName: name,
+          phoneNumber: phone,
+          createdAt: timestamp,
+          imageURL: imageUrl,
+          displayName: name,
+        };
+        await documentRef.set(data);
+      }
+
+      setName("");
+      setPhone("");
+      setImage(null);
+    } else {
+      console.log("User not found");
+      return;
+    }
   };
 
   const createAndMoveScreens = async () => {
     await addHuman();
-    navigation.navigate("CreateDogProfile");
+    navigation.navigate("CreateDogProfile", { displayName: name });
   };
 
   return (
@@ -250,17 +254,14 @@ const styles = StyleSheet.create({
   },
   cancel: {
     fontSize: 16,
+    fontWeight: "700",
+    marginTop: 24,
+    marginBottom: 100,
   },
   photoButton: {
     height: 144,
     width: 144,
     marginTop: 24,
     alignContent: "center",
-  },
-  cancel: {
-    fontWeight: "700",
-    fontSize: 16,
-    marginTop: 24,
-    marginBottom: 100,
   },
 });

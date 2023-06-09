@@ -2,11 +2,14 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import NavBar from "../../NavBar";
 
-const Dashboard = ({ user, navigation }) => {
+const Dashboard = ({ route, navigation }) => {
+  const { displayName } = route.params;
+  let welcomeMessage = `Welcome Back, ${displayName || "Guest"}`;
+
   return (
     <View style={styles.dashboard}>
       <NavBar navigation={navigation} />
-      <Text style={styles.welcomeText}>Welcome back</Text>
+      <Text style={styles.welcomeText}>{welcomeMessage}</Text>
     </View>
   );
 };
