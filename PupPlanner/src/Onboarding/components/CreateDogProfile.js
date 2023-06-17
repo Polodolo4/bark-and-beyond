@@ -48,6 +48,19 @@ const CreateDogProfile = () => {
 
   const navigation = useNavigation();
 
+  const [userDogProfiles, setUserDogProfiles] = useState([]);
+
+  useEffect(() => {
+    const fetchUserDogProfiles = async () => {
+      const email = firebase.auth().currentUser.uid;
+      const snapshot = await dogRef.where("email", "==", email).get();
+      const profiles = snapshot.docs.map((doc) => doc.data());
+      setUserDogProfiles(profiles);
+    };
+
+    fetchUserDogProfiles();
+  }, []);
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -121,6 +134,11 @@ const CreateDogProfile = () => {
     }
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const email = firebase.auth().currentUser.email;
+
+    // Set the document ID as the user's email
+    const docRef = dogRef.doc(email);
+
     const data = {
       petName: name,
       petAge: age,
@@ -130,8 +148,9 @@ const CreateDogProfile = () => {
       createdAt: timestamp,
       imageURL: imageUrl,
     };
-    dogRef
-      .add(data)
+
+    docRef
+      .set(data)
       .then(() => {
         setName("");
         setAge("");
@@ -147,6 +166,8 @@ const CreateDogProfile = () => {
   const createAndMoveToDashboard = () => {
     addDog();
     navigation.navigate("Dashboard");
+    console.log(name);
+    console.log(notes);
   };
 
   return (
