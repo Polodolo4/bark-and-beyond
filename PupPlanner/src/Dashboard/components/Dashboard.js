@@ -41,11 +41,11 @@ const Dashboard = ({ route, navigation }) => {
   }, [email]);
 
   if (dogProfile) {
-    welcomeMessage = `Welcome Back, ${
+    welcomeMessage = `Welcome back, \n${
       dogProfile.petName ? dogProfile.petName : userEmail
     }`;
   } else {
-    welcomeMessage = `Welcome Back, ${userEmail}`;
+    welcomeMessage = `Welcome back, \n${userEmail}`;
   }
 
   return (
@@ -62,8 +62,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   welcomeText: {
-    fontSize: 24,
-    margin: 20,
+    fontSize: 38,
+    fontWeight: 700,
+    height: 114,
+    marginTop: 32,
+    textAlign: "center",
   },
 });
 
