@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import NavBar from "../../NavBar";
+import Calendar from "./Calendar"; // Import the Calendar component
 
 import { firebase } from "../../../Firebase/firebase";
 
 const Dashboard = ({ route, navigation }) => {
   const [userEmail, setUserEmail] = useState("");
+  const [loading, setLoading] = useState(true);
   const { email } = route.params;
   let welcomeMessage = "";
 
@@ -20,7 +22,6 @@ const Dashboard = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    // Fetch the dogProfile document matching the user's email
     const fetchDogProfile = async () => {
       try {
         const docSnapshot = await firebase
@@ -32,13 +33,24 @@ const Dashboard = ({ route, navigation }) => {
           const dogProfileData = docSnapshot.data();
           setDogProfile(dogProfileData);
         }
+        setLoading(false); // Set loading to false after fetching the data
       } catch (error) {
         console.error("Error fetching dogProfile:", error);
+        setLoading(false); // Set loading to false even if there's an error
       }
     };
 
     fetchDogProfile();
   }, [email]);
+
+  if (loading) {
+    return (
+      <View style={styles.dashboard}>
+        <NavBar navigation={navigation} />
+        <Text style={styles.welcomeText}>Loading...</Text>
+      </View>
+    );
+  }
 
   if (dogProfile) {
     welcomeMessage = `Welcome back, \n${
@@ -52,6 +64,7 @@ const Dashboard = ({ route, navigation }) => {
     <View style={styles.dashboard}>
       <NavBar navigation={navigation} />
       <Text style={styles.welcomeText}>{welcomeMessage}</Text>
+      <Calendar />
     </View>
   );
 };

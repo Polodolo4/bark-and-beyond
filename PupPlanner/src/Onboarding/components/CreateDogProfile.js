@@ -163,11 +163,18 @@ const CreateDogProfile = () => {
       });
   };
 
-  const createAndMoveToDashboard = () => {
-    addDog();
-    navigation.navigate("Dashboard");
-    console.log(name);
-    console.log(notes);
+  const createAndMoveToDashboard = async () => {
+    await addDog();
+
+    const email = firebase.auth().currentUser.email;
+    const docSnapshot = await dogRef.doc(email).get();
+    const dogProfileData = docSnapshot.data();
+    const petName = dogProfileData ? dogProfileData.petName : "";
+
+    navigation.navigate("Dashboard", {
+      email: email,
+      petName: petName,
+    });
   };
 
   return (
