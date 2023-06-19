@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, PanResponder } from "react-native";
 import NavBar from "../../NavBar";
-import Calendar from "./Calendar"; // Import the Calendar component
+import Calendar from "./Calendar";
+
+import { useNavigation } from "@react-navigation/native";
 
 import { firebase } from "../../../Firebase/firebase";
 
@@ -12,6 +14,8 @@ const Dashboard = ({ route, navigation }) => {
   let welcomeMessage = "";
 
   const [dogProfile, setDogProfile] = useState(null);
+  const [textSize, setTextSize] = useState(24);
+  const [isSliding, setIsSliding] = useState(false);
 
   useEffect(() => {
     // Check if the user is logged in
@@ -43,6 +47,25 @@ const Dashboard = ({ route, navigation }) => {
     fetchDogProfile();
   }, [email]);
 
+  const handleInteraction = () => {
+    setTextSize(28); // Increase the text size when the user interacts
+  };
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderMove: (evt, gestureState) => {
+      const { dx, dy } = gestureState;
+      if (dx > 0 || dy > 0) {
+        setIsSliding(true);
+      } else {
+        setIsSliding(false);
+      }
+    },
+    onPanResponderRelease: () => {
+      setIsSliding(false);
+    },
+  });
+
   if (loading) {
     return (
       <View style={styles.dashboard}>
@@ -63,7 +86,25 @@ const Dashboard = ({ route, navigation }) => {
   return (
     <View style={styles.dashboard}>
       <NavBar navigation={navigation} />
-      <Text style={styles.welcomeText}>{welcomeMessage}</Text>
+      <View
+        style={[
+          styles.welcomeTextContainer,
+          {
+            backgroundColor: isSliding ? "lightgray" : "transparent",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 3,
+              height: 3,
+            },
+            shadowOpacity: 0.5,
+            shadowRadius: 5,
+          },
+        ]}
+        {...panResponder.panHandlers}
+        onPress={handleInteraction}
+      >
+        <Text style={styles.welcomeText}>{welcomeMessage}</Text>
+      </View>
       <Calendar />
     </View>
   );

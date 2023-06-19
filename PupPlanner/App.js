@@ -10,6 +10,10 @@ import Login from "./src/Onboarding/components/Login";
 import CreateProfile from "./src/Onboarding/components/CreateProfile";
 import CreateDogProfile from "./src/Onboarding/components/CreateDogProfile";
 import Dashboard from "./src/Dashboard/components/Dashboard";
+import Community from "./src/Dashboard/components/Community";
+import Learning from "./src/Dashboard/components/Learning";
+import Services from "./src/Dashboard/components/Services";
+import Settings from "./src/Dashboard/components/Settings";
 import { firebase } from "./Firebase/firebase.js";
 
 const Stack = createStackNavigator();
@@ -61,6 +65,22 @@ const App = () => {
           name="Dashboard"
           component={Dashboard}
           initialParams={{ user }}
+        />
+        <Stack.Screen
+          name="Community"
+          component={Community}
+        />
+        <Stack.Screen
+          name="Learning"
+          component={Learning}
+        />
+        <Stack.Screen
+          name="Services"
+          component={Services}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
         />
       </Stack.Navigator>
     </NavigationContainer>
