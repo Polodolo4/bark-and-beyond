@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -27,6 +27,20 @@ const Calendar = () => {
   // Get the current day of the month
   const currentDay = currentDate.getDate();
 
+  // Calculate the date range for the current week (Sunday to Saturday)
+  const startOfWeek = new Date(currentDate);
+  startOfWeek.setDate(currentDay - currentDate.getDay()); // Adjust to Sunday
+  const endOfWeek = new Date(currentDate);
+  endOfWeek.setDate(currentDay + (6 - currentDate.getDay())); // Adjust to Saturday
+
+  // Generate an array of dates for the current week
+  const weekDates = [];
+  let currentDateIterator = new Date(startOfWeek);
+  while (currentDateIterator <= endOfWeek) {
+    weekDates.push(currentDateIterator.getDate());
+    currentDateIterator.setDate(currentDateIterator.getDate() + 1);
+  }
+
   // Function to handle the schedule button press
   const handleSchedulePress = () => {
     // Add your logic here for scheduling
@@ -37,23 +51,28 @@ const Calendar = () => {
     <View style={styles.container}>
       {/* Month and arrows */}
       <View style={styles.monthContainer}>
-        <TouchableOpacity onPress={handlePreviousMonth}>
-          <Text>{"<"}</Text>
+        <TouchableOpacity
+          onPress={handlePreviousMonth}
+          hitSlop={8}
+        >
+          <Image source={require("../assets/arrowLeft.png")} />
         </TouchableOpacity>
         <Text style={styles.monthText}>
           {currentMonthName} {currentYear}
         </Text>
-        <TouchableOpacity onPress={handleNextMonth}>
-          <Text>{">"}</Text>
+        <TouchableOpacity
+          onPress={handleNextMonth}
+          hitSlop={8}
+        >
+          <Image source={require("../assets/arrowRight.png")} />
         </TouchableOpacity>
       </View>
 
-      {/* Current week */}
+      {/*Current week rendering*/}
       <View style={styles.weekContainer}>
         {/* Render the days of the week */}
-        {Array.from({ length: 7 }).map((_, index) => {
-          const day = currentDay + index;
-          const isCurrentDay = index === 0; // Check if it's the current day
+        {weekDates.map((date, index) => {
+          const isCurrentDay = date === currentDay; // Check if it's the current day
           return (
             <View
               key={index}
@@ -65,18 +84,16 @@ const Calendar = () => {
               <Text
                 style={[styles.dayText, isCurrentDay && styles.currentDayText]}
               >
-                {day}
+                {date}
               </Text>
             </View>
           );
         })}
       </View>
-
       {/* Sample text */}
       <Text style={styles.scheduleText}>
         Schedule a dog walker or sitter today.
       </Text>
-
       {/* Schedule button */}
       <TouchableOpacity
         style={styles.scheduleButton}

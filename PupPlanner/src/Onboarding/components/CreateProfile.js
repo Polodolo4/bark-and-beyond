@@ -107,7 +107,7 @@ const CreateProfile = () => {
     if (user) {
       const documentRef = firebase
         .firestore()
-        .collection("usersCollection")
+        .collection("humanProfiles")
         .doc(user.uid);
       const documentSnapshot = await documentRef.get();
 
