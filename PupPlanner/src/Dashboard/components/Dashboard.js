@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, PanResponder } from "react-native";
 import NavBar from "../../NavBar";
 import Calendar from "./Calendar";
+import Notifications from "./Notifications";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -106,6 +107,7 @@ const Dashboard = ({ route, navigation }) => {
         <Text style={styles.welcomeText}>{welcomeMessage}</Text>
       </View>
       <Calendar />
+      <Notifications />
     </View>
   );
 };
