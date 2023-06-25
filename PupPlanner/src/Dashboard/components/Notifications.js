@@ -15,10 +15,12 @@ const Notifications = () => {
           <Text style={styles.notifyHeader}>Help Request</Text>
           <Text style={styles.notifyText}>March 30th</Text>
         </View>
-        <Image
-          style={styles.arrow}
-          source={require("../assets/largeArrowRight.png")}
-        />
+        <View style={styles.arrowContainer}>
+          <Image
+            style={styles.arrow}
+            source={require("../assets/largeArrowRight.png")}
+          />
+        </View>
       </View>
 
       <View style={styles.notifyHelp}>
@@ -30,10 +32,12 @@ const Notifications = () => {
           <Text style={styles.notifyHeader}>Check-up due</Text>
           <Text style={styles.notifyText}>Due March 31st</Text>
         </View>
-        <Image
-          style={styles.arrow}
-          source={require("../assets/largeArrowRight.png")}
-        />
+        <View style={styles.arrowContainer}>
+          <Image
+            style={styles.arrow}
+            source={require("../assets/largeArrowRight.png")}
+          />
+        </View>
       </View>
     </View>
   );
@@ -47,27 +51,32 @@ const styles = StyleSheet.create({
   },
   topHeader: {
     fontWeight: 700,
-    fontSize: 24,
+    fontSize: 22,
     paddingLeft: 15,
   },
   notifyHelp: {
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: 15,
+    paddingLeft: 12,
     marginTop: 20,
     backgroundColor: "#E9EEF6",
   },
   notifyContent: {
-    marginLeft: 20,
+    flex: 1,
+    marginLeft: 12,
     height: 70,
     justifyContent: "center",
   },
   notifyHeader: {
     fontWeight: 600,
-    fontSize: 20,
+    fontSize: 16,
   },
   notifyText: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#000",
+  },
+  arrowContainer: {
+    alignItems: "flex-end",
+    marginRight: 16,
   },
 });
