@@ -94,11 +94,12 @@ const NavBar = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   navbar: {
-    height: 100,
+    height: 129,
     backgroundColor: "#B8DFA9",
     paddingHorizontal: 15,
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
+    paddingBottom: 15,
     justifyContent: "space-between",
     zIndex: 1,
   },
