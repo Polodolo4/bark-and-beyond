@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, PanResponder } from "react-native";
+import { View, Text, StyleSheet, PanResponder, ScrollView } from "react-native";
 import NavBar from "../../NavBar";
 import Calendar from "./Calendar";
 import Notifications from "./Notifications";
@@ -85,7 +85,7 @@ const Dashboard = ({ route, navigation }) => {
   }
 
   return (
-    <View style={styles.dashboard}>
+    <ScrollView style={styles.dashboard}>
       <NavBar navigation={navigation} />
       <View
         style={[
@@ -108,7 +108,7 @@ const Dashboard = ({ route, navigation }) => {
       </View>
       <Calendar />
       <Notifications />
-    </View>
+    </ScrollView>
   );
 };
 

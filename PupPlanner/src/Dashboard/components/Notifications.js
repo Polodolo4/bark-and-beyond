@@ -15,6 +15,10 @@ const Notifications = () => {
           <Text style={styles.notifyHeader}>Help Request</Text>
           <Text style={styles.notifyText}>March 30th</Text>
         </View>
+        <Image
+          style={styles.arrow}
+          source={require("../assets/largeArrowRight.png")}
+        />
       </View>
 
       <View style={styles.notifyHelp}>
@@ -26,6 +30,10 @@ const Notifications = () => {
           <Text style={styles.notifyHeader}>Check-up due</Text>
           <Text style={styles.notifyText}>Due March 31st</Text>
         </View>
+        <Image
+          style={styles.arrow}
+          source={require("../assets/largeArrowRight.png")}
+        />
       </View>
     </View>
   );
@@ -51,6 +59,8 @@ const styles = StyleSheet.create({
   },
   notifyContent: {
     marginLeft: 20,
+    height: 70,
+    justifyContent: "center",
   },
   notifyHeader: {
     fontWeight: 600,
