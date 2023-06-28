@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
-import Carousel from "react-native-snap-carousel-v4";
+import Carousel from "react-native-new-snap-carousel";
 
 const { width } = Dimensions.get("window");
-const slideWidth = width * 0.5;
+const slideWidth = width * 0.45;
 
 const slides = [
   {
@@ -49,7 +49,6 @@ const Navigation = () => {
           sliderWidth={width}
           itemWidth={slideWidth}
           inactiveSlideScale={0.8}
-          inactiveSlideOpacity={0.6}
           loop={true}
           loopClonesPerSide={slides.length}
         />
@@ -61,10 +60,12 @@ const Navigation = () => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
+    marginBottom: 200,
   },
   header: {
     fontSize: 22,
     fontWeight: "bold",
+    paddingLeft: 15,
   },
   content: {
     flex: 1,
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 50,
+    height: 230,
   },
   image: {
     height: 142,
