@@ -60,7 +60,6 @@ const Navigation = () => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
-    marginBottom: 200,
   },
   header: {
     fontSize: 22,

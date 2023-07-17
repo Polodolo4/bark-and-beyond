@@ -24,10 +24,12 @@ const Notifications = () => {
       </View>
 
       <View style={styles.notifyHelp}>
-        <Image
-          source={require("../assets/checkupIcon.png")}
-          style={styles.notifyIcon}
-        />
+        <View style={styles.iconContainer}>
+          <Image
+            source={require("../assets/clipboard.png")}
+            style={styles.notifyIcon}
+          />
+        </View>
         <View style={styles.notifyContent}>
           <Text style={styles.notifyHeader}>Check-up due</Text>
           <Text style={styles.notifyText}>Due March 31st</Text>
@@ -78,5 +80,14 @@ const styles = StyleSheet.create({
   arrowContainer: {
     alignItems: "flex-end",
     marginRight: 16,
+  },
+  iconContainer: {
+    backgroundColor: "#fff",
+    height: 48,
+    width: "12.5%",
+    borderRadius: 15,
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
   },
 });
