@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, PanResponder, ScrollView } from "react-native";
-
-import NavBar from "../../NavBar";
 import Calendar from "./Calendar";
 import Navigation from "./Navigation";
 import Notifications from "./Notifications";
+import ScreenWrapper from "../../ScreenWrapper";
 import HelpRequests from "./HelpRequests";
 
 import { useNavigation } from "@react-navigation/native";
@@ -73,7 +72,6 @@ const Dashboard = ({ route, navigation }) => {
   if (loading) {
     return (
       <View style={styles.dashboard}>
-        <NavBar navigation={navigation} />
         <Text style={styles.welcomeText}>Loading...</Text>
       </View>
     );
@@ -88,32 +86,33 @@ const Dashboard = ({ route, navigation }) => {
   }
 
   return (
-    <ScrollView style={styles.dashboard}>
-      <NavBar navigation={navigation} />
-      <View
-        style={[
-          styles.welcomeTextContainer,
-          {
-            backgroundColor: isSliding ? "lightgray" : "transparent",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 3,
-              height: 3,
+    <ScreenWrapper navigation={navigation}>
+      <ScrollView style={styles.dashboard}>
+        <View
+          style={[
+            styles.welcomeTextContainer,
+            {
+              backgroundColor: isSliding ? "lightgray" : "transparent",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 3,
+                height: 3,
+              },
+              shadowOpacity: 0.5,
+              shadowRadius: 5,
             },
-            shadowOpacity: 0.5,
-            shadowRadius: 5,
-          },
-        ]}
-        {...panResponder.panHandlers}
-        onPress={handleInteraction}
-      >
-        <Text style={styles.welcomeText}>{welcomeMessage}</Text>
-      </View>
-      <Calendar />
-      <Notifications />
-      <Navigation />
-      <HelpRequests />
-    </ScrollView>
+          ]}
+          {...panResponder.panHandlers}
+          onPress={handleInteraction}
+        >
+          <Text style={styles.welcomeText}>{welcomeMessage}</Text>
+        </View>
+        <Calendar />
+        <Notifications />
+        <Navigation />
+        <HelpRequests />
+      </ScrollView>
+    </ScreenWrapper>
   );
 };
 

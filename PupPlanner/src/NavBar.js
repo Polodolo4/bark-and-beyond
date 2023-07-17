@@ -31,7 +31,7 @@ const DropdownMenu = ({ navigation, closeMenu }) => {
 
   const handleItemPress = (item) => {
     navigation.navigate(item);
-    closeMenu(); // close the menu when an item is clicked
+    closeMenu();
   };
 
   return (
@@ -65,9 +65,13 @@ const NavBar = ({ navigation }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("state", () => {
-      setIsMenuVisible(false);
-    });
+    let unsubscribe = () => {};
+
+    if (navigation) {
+      unsubscribe = navigation.addListener("blur", () => {
+        setIsMenuVisible(false);
+      });
+    }
 
     return unsubscribe;
   }, [navigation]);
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
   dropdownMenu: {
     position: "absolute",
     width: 200,
-    top: 80, // Adjust the top value to move the dropdown menu down
+    top: 80,
     left: 10,
     backgroundColor: "#B8DFA9",
     borderRadius: 12,
