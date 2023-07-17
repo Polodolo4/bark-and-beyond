@@ -7,10 +7,12 @@ const Notifications = () => {
       <Text style={styles.topHeader}>Notifications</Text>
 
       <View style={styles.notifyHelp}>
-        <Image
-          source={require("../assets/helpIcon.png")}
-          style={styles.notifyIcon}
-        />
+        <View style={styles.iconContainer}>
+          <Image
+            source={require("../assets/bell.png")}
+            style={styles.notifyIcon}
+          />
+        </View>
         <View style={styles.notifyContent}>
           <Text style={styles.notifyHeader}>Help Request</Text>
           <Text style={styles.notifyText}>March 30th</Text>
@@ -89,5 +91,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
+    // Add the elevation property for Android (works only on Android)
+    elevation: 6,
+    // Add the shadow properties for iOS (works only on iOS)
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.5,
+    shadowColor: "#000",
   },
 });
