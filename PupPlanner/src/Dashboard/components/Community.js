@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import Modal from "react-native-modal";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import NavBar from "../../NavBar";
@@ -7,20 +14,36 @@ import { Dimensions } from "react-native";
 
 const Community = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isHelpRequestModalVisible, setHelpRequestModalVisible] =
+    useState(false);
   const [selectedSection, setSelectedSection] = useState("Network");
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
+  const toggleHelpRequestModal = () => {
+    setHelpRequestModalVisible(!isHelpRequestModalVisible);
+  };
+
   const users = [
-    { id: 1, name: "John", image: require("../assets/john.png") },
-    { id: 2, name: "Sammy", image: require("../assets/sammy.png") },
+    {
+      id: 1,
+      name: "John",
+      image: require("../assets/john.png"),
+      helpRequest: "Need dog walking in March for 2 weeks, paid.. Twice a day.",
+    },
+    {
+      id: 2,
+      name: "Sammy",
+      image: require("../assets/sammy.png"),
+      helpRequest: "Need someone to walk my dog for an April weekend...",
+    },
     { id: 3, name: "Remi", image: require("../assets/remi.png") },
   ];
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <NavBar navigation={navigation} />
 
       <View style={styles.navbar}>
@@ -130,7 +153,128 @@ const Community = ({ navigation }) => {
           </View>
         ))}
       </View>
-    </View>
+
+      <View style={styles.titleContainer}>
+        <View style={styles.titleAndHelpIconContainer}>
+          <Text style={styles.title}>Help Requests</Text>
+          <TouchableOpacity
+            onPress={toggleHelpRequestModal}
+            style={styles.helpIcon}
+          >
+            <Ionicons
+              name="ios-help-circle-outline"
+              size={28}
+              color="black"
+            />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity>
+          <Ionicons
+            name="ios-add-circle-outline"
+            size={28}
+            color="black"
+            style={styles.plusIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <Modal
+        isVisible={isHelpRequestModalVisible}
+        onBackdropPress={toggleHelpRequestModal}
+      >
+        <View style={styles.modal}>
+          <TouchableOpacity
+            style={styles.modalCloseButton}
+            onPress={toggleHelpRequestModal}
+          >
+            <Text style={styles.modalCloseButtonText}>X</Text>
+          </TouchableOpacity>
+          <Text style={styles.modalTitle}>What's a Help Request?</Text>
+          <Text style={styles.modalContent}>
+            These are requests posted by your trusted network! You can post your
+            own or lend a helping hand!
+          </Text>
+        </View>
+      </Modal>
+
+      <View style={styles.usersContainer}>
+        {users.map(
+          (user) =>
+            user.helpRequest && (
+              <View
+                key={user.id}
+                style={styles.userCard}
+              >
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={user.image}
+                    style={styles.userImage}
+                  />
+                  <Text style={styles.userName}>{user.name}</Text>
+                </View>
+                <View style={styles.formContainer}>
+                  <View style={styles.textAndIconContainer}>
+                    <Text style={styles.userName}>{user.helpRequest}</Text>
+                  </View>
+                </View>
+              </View>
+            )
+        )}
+      </View>
+
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Trusted Network Feed</Text>
+        <TouchableOpacity>
+          <Ionicons
+            name="ios-add-circle-outline"
+            size={28}
+            color="black"
+            style={styles.plusIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.feedCard}>
+        <Image
+          source={require("../assets/network_dog_1.png")}
+          style={styles.feedImage}
+        />
+        <View style={styles.userInfoContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../assets/john.png")}
+              style={styles.userImage}
+            />
+            <Text style={styles.userName}>John</Text>
+          </View>
+          <View style={styles.feedFormContainer}>
+            <Text>
+              Cooper has been doing so well with his training! Celebrating with
+              a puppucino!
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.feedCard}>
+        <Image
+          source={require("../assets/network_dog_2.png")}
+          style={styles.feedImage}
+        />
+        <View style={styles.userInfoContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../assets/sammy.png")}
+              style={styles.userImage}
+            />
+            <Text style={styles.userName}>Sammy</Text>
+          </View>
+          <View style={styles.feedFormContainer}>
+            <Text>Weekly hike with my sweet bb {"<3"}</Text>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -225,6 +369,25 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginRight: 10,
     backgroundColor: "transparent",
+    alignItems: "center",
+  },
+  feedCard: {
+    marginBottom: 20,
+    marginTop: 10,
+  },
+  feedImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+  },
+  userInfoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+  },
+  feedFormContainer: {
+    flex: 1,
+    marginLeft: 10,
   },
   userImage: {
     width: 50,
@@ -249,7 +412,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E9EEF6",
   },
   userName: {
-    // placeholder
+    fontSize: 14,
   },
 });
 
