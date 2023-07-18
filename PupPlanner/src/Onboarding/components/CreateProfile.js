@@ -10,12 +10,12 @@ import {
 } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
-
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { firebase } from "../../../Firebase/firebase";
+import "firebase/storage";
+import "firebase/firestore";
 
 const InputField = ({
   value,
@@ -41,66 +41,49 @@ const CreateProfile = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [image, setImage] = useState(null);
-  const [uploading, setUploading] = useState(false);
   const humanRef = firebase.firestore().collection("humanProfiles");
 
   const navigation = useNavigation();
 
   const pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (status === "granted") {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+      return;
+    }
 
-      console.log(result);
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      }
+    if (!result.cancelled) {
+      setImage(result.uri);
     }
   };
 
   const uploadImage = async () => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function () {
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", image, true);
-      xhr.send(null);
-    });
-    const ref = firebase.storage().ref().child(`Pictures/Image1`);
-    const snapshot = ref.put(blob);
-    snapshot.on(
-      firebase.storage.TaskEvent.STATE_CHANGED,
-      () => {
-        setUploading(true);
-      },
-      (error) => {
-        setUploading(false);
-        console.log(error);
-        blob.close();
-        return;
-      },
-      () => {
-        snapshot.snapshot.ref.getDownloadURL().then((url) => {
-          setUploading(false);
-          console.log("Download URL: ", url);
-          setImage(url);
-          blob.close();
-          return url;
-        });
-      }
-    );
+    try {
+      if (!image) return null;
+
+      const response = await fetch(image);
+      const blob = await response.blob();
+
+      const timestamp = Date.now();
+      const filename = `Image${timestamp};`;
+      const ref = firebase.storage().ref().child(`humanPictures/${filename}`);
+
+      const snapshot = await ref.put(blob);
+      const downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (error) {
+      console.log("Error in uploadImage function: ", error);
+      throw error;
+    }
   };
 
   const handleNameChange = (value) => {
@@ -111,29 +94,51 @@ const CreateProfile = () => {
     setPhone(value);
   };
 
-  //add human to humanProfiles collection
-  const addHuman = () => {
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const data = {
-      ownerName: name,
-      phoneNumber: phone,
-      createdAt: timestamp,
-    };
-    humanRef
-      .add(data)
-      .then(() => {
-        setName("");
-        setPhone("");
-      })
-      .catch((error) => {
-        alert(error);
-      });
+  const addHuman = async () => {
+    const imageUrl = await uploadImage();
+
+    if (!imageUrl) {
+      console.log("Failed to upload image");
+      return;
+    }
+
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      const documentRef = firebase
+        .firestore()
+        .collection("humanProfiles")
+        .doc(user.uid);
+      const documentSnapshot = await documentRef.get();
+
+      if (documentSnapshot.exists) {
+        await documentRef.update({
+          displayName: name,
+        });
+      } else {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const data = {
+          ownerName: name,
+          phoneNumber: phone,
+          createdAt: timestamp,
+          imageURL: imageUrl,
+          displayName: name,
+        };
+        await documentRef.set(data);
+      }
+
+      setName("");
+      setPhone("");
+      setImage(null);
+    } else {
+      console.log("User not found");
+      return;
+    }
   };
 
-  const createAndMoveScreens = () => {
-    addHuman();
-    uploadImage();
-    navigation.navigate("CreateDogProfile");
+  const createAndMoveScreens = async () => {
+    await addHuman();
+    navigation.navigate("CreateDogProfile", { displayName: name });
   };
 
   return (
@@ -141,17 +146,21 @@ const CreateProfile = () => {
       <SafeAreaView style={styles.container}>
         <Text style={styles.header}>Create Profile</Text>
 
-        <TouchableOpacity style={styles.photoButton} onPress={pickImage}>
-          {!image && (
+        <TouchableOpacity
+          style={styles.photoButton}
+          onPress={pickImage}
+        >
+          {image ? (
+            <Image
+              source={{ uri: image }}
+              style={{ width: "100%", height: "100%", borderRadius: 100 }}
+            />
+          ) : (
             <Image
               style={styles.photoImage}
               source={require("../assets/add-photo.png")}
             />
           )}
-          <Image
-            source={{ uri: image }}
-            style={{ width: "100%", height: "100%", borderRadius: 100 }}
-          />
         </TouchableOpacity>
 
         <Text style={styles.contact}>How can we contact you?</Text>
@@ -176,12 +185,8 @@ const CreateProfile = () => {
           <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={uploadImage}>
-          <Text style={styles.goBack}>Send to Firebase</Text>
-        </TouchableOpacity>
-
         <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-          <Text style={styles.goBack}>Go Back</Text>
+          <Text style={styles.cancel}>Cancel</Text>
         </TouchableOpacity>
       </SafeAreaView>
     </KeyboardAwareScrollView>
@@ -249,17 +254,14 @@ const styles = StyleSheet.create({
   },
   cancel: {
     fontSize: 16,
+    fontWeight: "700",
+    marginTop: 24,
+    marginBottom: 100,
   },
   photoButton: {
     height: 144,
     width: 144,
     marginTop: 24,
     alignContent: "center",
-  },
-  goBack: {
-    fontWeight: "700",
-    fontSize: 16,
-    marginTop: 24,
-    marginBottom: 70,
   },
 });

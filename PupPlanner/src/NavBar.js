@@ -1,8 +1,15 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const DropdownMenu = ({ navigation }) => {
+const DropdownMenu = ({ navigation, closeMenu }) => {
   const menuItems = [
     "Dashboard",
     "Community",
@@ -12,15 +19,42 @@ const DropdownMenu = ({ navigation }) => {
     "Log out",
   ];
 
+  const [highlightedItem, setHighlightedItem] = useState(null);
+
+  const handlePressIn = (index) => {
+    setHighlightedItem(index);
+  };
+
+  const handlePressOut = () => {
+    setHighlightedItem(null);
+  };
+
+  const handleItemPress = (item) => {
+    navigation.navigate(item);
+    closeMenu();
+  };
+
   return (
     <View style={styles.dropdownMenu}>
       {menuItems.map((item, index) => (
         <TouchableOpacity
           key={index}
-          style={styles.menuItem}
-          onPress={() => navigation.navigate(item)}
+          style={[
+            styles.menuItem,
+            index === highlightedItem && styles.highlightedItem,
+          ]}
+          onPress={() => handleItemPress(item)}
+          onPressIn={() => handlePressIn(index)}
+          onPressOut={handlePressOut}
         >
-          <Text style={styles.menuItemText}>{item}</Text>
+          <Text
+            style={[
+              styles.menuItemText,
+              index === highlightedItem && styles.highlightedItemText,
+            ]}
+          >
+            {item}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -30,44 +64,76 @@ const DropdownMenu = ({ navigation }) => {
 const NavBar = ({ navigation }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
+  useEffect(() => {
+    let unsubscribe = () => {};
+
+    if (navigation) {
+      unsubscribe = navigation.addListener("blur", () => {
+        setIsMenuVisible(false);
+      });
+    }
+
+    return unsubscribe;
+  }, [navigation]);
+
   const handleMenuClick = () => {
     setIsMenuVisible(!isMenuVisible);
   };
 
+  const closeMenu = () => {
+    setIsMenuVisible(false);
+  };
+
+  const handleDogIconClick = () => {
+    navigation.navigate("Dashboard");
+  };
+
   return (
-    <View style={styles.navbar}>
-      <TouchableOpacity onPress={handleMenuClick}>
-        <MaterialIcons name="menu" size={24} color="black" />
-      </TouchableOpacity>
-      {isMenuVisible && (
-        <DropdownMenu navigation={navigation} style={styles.dropdownMenu} />
-      )}
-      <Text style={styles.navbarText}>Bark and Beyond</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("Search")}>
-        <MaterialIcons name="search" size={24} color="black" />
-      </TouchableOpacity>
-    </View>
+    <TouchableWithoutFeedback onPress={closeMenu}>
+      <View style={styles.navbar}>
+        <TouchableOpacity onPress={handleMenuClick}>
+          <MaterialIcons
+            name="menu"
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+        {isMenuVisible && (
+          <DropdownMenu
+            navigation={navigation}
+            closeMenu={closeMenu}
+          />
+        )}
+        <TouchableOpacity onPress={handleDogIconClick}>
+          <Image source={require("../assets/gray_logo.png")} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+          <MaterialIcons
+            name="search"
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   navbar: {
-    height: 100,
+    height: 129,
     backgroundColor: "#B8DFA9",
     paddingHorizontal: 15,
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
+    paddingBottom: 15,
     justifyContent: "space-between",
     zIndex: 1,
-  },
-  navbarText: {
-    fontSize: 20,
-    color: "#000",
   },
   dropdownMenu: {
     position: "absolute",
     width: 200,
-    top: 60,
+    top: 80,
     left: 10,
     backgroundColor: "#B8DFA9",
     borderRadius: 12,
@@ -80,6 +146,26 @@ const styles = StyleSheet.create({
   menuItemText: {
     fontSize: 16,
     color: "#000",
+  },
+  highlightedItem: {
+    transform: [{ scale: 1.1 }],
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  highlightedItemText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textShadowColor: "rgba(0, 0, 0, 0.5)",
+    textShadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    textShadowRadius: 4,
   },
 });
 
