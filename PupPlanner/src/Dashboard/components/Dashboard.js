@@ -5,6 +5,7 @@ import Navigation from "./Navigation";
 import Notifications from "./Notifications";
 import ScreenWrapper from "../../ScreenWrapper";
 import HelpRequests from "./HelpRequests";
+import TrustedNetworkFeed from "./TrustedNetworkFeed";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -111,6 +112,7 @@ const Dashboard = ({ route, navigation }) => {
         <Notifications />
         <Navigation />
         <HelpRequests />
+        <TrustedNetworkFeed />
       </ScrollView>
     </ScreenWrapper>
   );
