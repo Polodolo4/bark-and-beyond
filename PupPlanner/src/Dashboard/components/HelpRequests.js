@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, Image } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 
 const HelpRequests = () => {
@@ -6,9 +7,11 @@ const HelpRequests = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Requests</Text>
-        <Image
-          source={require("../assets/plus.png")}
-          style={styles.plus}
+        <Ionicons
+          name="ios-add-circle-outline"
+          size={28}
+          color="black"
+          style={styles.plusIcon}
         />
       </View>
 
@@ -33,7 +36,7 @@ const HelpRequests = () => {
       <View style={styles.requestContact}>
         <View style={styles.imgContainer}>
           <Image
-            source={require("../assets/john1.png")}
+            source={require("../assets/sammy.png")}
             style={styles.user}
           />
           <Text style={styles.helpName}>Sammy</Text>
@@ -41,7 +44,9 @@ const HelpRequests = () => {
 
         <View style={styles.requestBody}>
           <View style={styles.textContainer}>
-            <Text style={styles.requestText}>Need someone</Text>
+            <Text style={styles.requestText}>
+              Need someone to walk my dog for an April weekend...
+            </Text>
           </View>
         </View>
       </View>
@@ -60,7 +65,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  plus: {
+  plusIcon: {
     marginRight: 16,
   },
   headerText: {
@@ -82,10 +87,8 @@ const styles = StyleSheet.create({
   },
   requestBody: {
     height: 73,
-    width: "80%",
-    marginRight: 16,
-    alignItems: "center",
-    alignSelf: "center",
+    width: "76%",
+    marginRight: 22,
     backgroundColor: "#E9EEF6",
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
@@ -93,10 +96,17 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginTop: 8,
+    marginLeft: 11,
+    marginRight: 12,
+    marginBottom: 17,
   },
   requestText: {
     fontSize: 16,
     fontWeight: "400",
     color: "#000",
+  },
+  user: {
+    height: 48,
+    width: 48,
   },
 });
