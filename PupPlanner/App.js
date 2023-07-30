@@ -11,9 +11,11 @@ import CreateProfile from "./src/Onboarding/components/CreateProfile";
 import CreateDogProfile from "./src/Onboarding/components/CreateDogProfile";
 import Dashboard from "./src/Dashboard/components/Dashboard";
 import Community from "./src/Dashboard/components/Community";
+import AddToPN from "./src/Dashboard/components/AddToPN";
 import Learning from "./src/Dashboard/components/Learning";
 import Services from "./src/Dashboard/components/Services";
 import Playdate from "./src/Dashboard/components/Playdate";
+import Chatboard from "./src/Dashboard/components/Chatboard";
 import Settings from "./src/Dashboard/components/Settings";
 import { firebase } from "./Firebase/firebase.js";
 
@@ -72,8 +74,16 @@ const App = () => {
           component={Community}
         />
         <Stack.Screen
+          name="AddToPN"
+          component={AddToPN}
+        />
+        <Stack.Screen
           name="Playdate"
           component={Playdate}
+        />
+        <Stack.Screen
+          name="Chatboard"
+          component={Chatboard}
         />
         <Stack.Screen
           name="Learning"
