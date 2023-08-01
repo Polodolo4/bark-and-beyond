@@ -320,7 +320,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     top: 0,
-    height: 50,
   },
   navText: {
     color: "black",
