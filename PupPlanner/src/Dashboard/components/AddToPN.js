@@ -149,7 +149,7 @@ const AddToPN = () => {
 
       <TouchableOpacity
         style={styles.continueButton}
-        //  onPress={createAndMoveScreens}
+        onPress={() => navigation.navigate("ProfilePN")}
       >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   continueButton: {
-    //  display: "flex",
+    //display: "flex",
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#323841",
     borderRadius: 30,
     marginTop: 32,
+    marginBottom: 116,
   },
   continueText: {
     color: "#FFF",

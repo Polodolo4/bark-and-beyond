@@ -18,6 +18,7 @@ import Playdate from "./src/Dashboard/components/Playdate";
 import Chatboard from "./src/Dashboard/components/Chatboard";
 import Settings from "./src/Dashboard/components/Settings";
 import PostDetail from "./src/Dashboard/components/PostDetail";
+import ProfilePN from "./src/Dashboard/components/ProfilePN";
 import { firebase } from "./Firebase/firebase.js";
 
 const Stack = createStackNavigator();
@@ -101,6 +102,10 @@ const App = () => {
         <Stack.Screen
           name="PostDetail"
           component={PostDetail}
+        />
+        <Stack.Screen
+          name="ProfilePN"
+          component={ProfilePN}
         />
       </Stack.Navigator>
     </NavigationContainer>
