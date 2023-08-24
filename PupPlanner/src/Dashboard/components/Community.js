@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,17 +6,33 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import Modal from "react-native-modal";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import NavBar from "../../NavBar";
-import { Dimensions } from "react-native";
+import ScreenWrapper from "../../ScreenWrapper";
+import AppContext from "./AppContext";
+import { useFocusEffect } from "@react-navigatsd/native";
 
 const Community = ({ navigation }) => {
+  const { selectedTab, setSelectedTab } = useContext(AppContext);
+
+  React.useEffect(() => {
+    setSelectedTab("Network");
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelectedTab("Network");
+    }, [])
+  );
+
   const [isModalVisible, setModalVisible] = useState(false);
+
   const [isHelpRequestModalVisible, setHelpRequestModalVisible] =
     useState(false);
-  const [selectedSection, setSelectedSection] = useState("Network");
+
+  //const [selectedSection, setSelectedSection] = useState("Network");
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -42,165 +58,101 @@ const Community = ({ navigation }) => {
     { id: 3, name: "Remi", image: require("../assets/remi.png") },
   ];
 
+  const handleNavigation = (section) => {
+    setSelectedTab(section);
+    if (section === "Play Date") {
+      navigation.navigate("Playdate");
+    } else if (section === "Chatboard") {
+      navigation.navigate("Chatboard");
+    }
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <NavBar navigation={navigation} />
-
-      <View style={styles.navbar}>
-        <TouchableOpacity onPress={() => setSelectedSection("Network")}>
-          <Text
-            style={
-              selectedSection === "Network"
-                ? styles.navTextSelected
-                : styles.navText
-            }
-          >
-            Network
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedSection("Play Date")}>
-          <Text
-            style={
-              selectedSection === "Play Date"
-                ? styles.navTextSelected
-                : styles.navText
-            }
-          >
-            Play Date
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedSection("Chatboard")}>
-          <Text
-            style={
-              selectedSection === "Chatboard"
-                ? styles.navTextSelected
-                : styles.navText
-            }
-          >
-            Chatboard
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.titleContainer}>
-        <View style={styles.titleAndHelpIconContainer}>
-          <Text style={styles.title}>Trusted Network</Text>
-          <TouchableOpacity
-            onPress={toggleModal}
-            style={styles.helpIcon}
-          >
-            <Ionicons
-              name="ios-help-circle-outline"
-              size={28}
-              color="black"
-            />
+    <ScreenWrapper navigation={navigation}>
+      <View style={styles.container}>
+        <View style={styles.navbar}>
+          <TouchableOpacity onPress={() => setSelectedTab("Network")}>
+            <Text
+              style={
+                selectedTab === "Network"
+                  ? styles.navTextSelected
+                  : styles.navText
+              }
+            >
+              Network
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleNavigation("Play Date")}>
+            <Text
+              style={
+                selectedTab === "Play Date"
+                  ? styles.navTextSelected
+                  : styles.navText
+              }
+            >
+              Play Date
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleNavigation("Chatboard")}>
+            <Text
+              style={
+                selectedTab === "Chatboard"
+                  ? styles.navTextSelected
+                  : styles.navText
+              }
+            >
+              Chatboard
+            </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity>
-          <Ionicons
-            name="ios-add-circle-outline"
-            size={28}
-            color="black"
-            style={styles.plusIcon}
-          />
-        </TouchableOpacity>
-      </View>
 
-      <Modal
-        isVisible={isModalVisible}
-        onBackdropPress={toggleModal}
-      >
-        <View style={styles.modal}>
-          <TouchableOpacity
-            style={styles.modalCloseButton}
-            onPress={toggleModal}
-          >
-            <Text style={styles.modalCloseButtonText}>X</Text>
-          </TouchableOpacity>
-          <Text style={styles.modalTitle}>What's Trusted Network?</Text>
-          <Text style={styles.modalContent}>
-            This is your network of trusted walkers or sitters that you've
-            worked with or people you know personally who use Pup Planner. Add
-            them manually or from their profile!
-          </Text>
-        </View>
-      </Modal>
-
-      <View style={styles.usersContainer}>
-        {users.map((user) => (
-          <View
-            key={user.id}
-            style={styles.userCard}
-          >
-            <View style={styles.imageContainer}>
-              <Image
-                source={user.image}
-                style={styles.userImage}
+        <ScrollView>
+          <View style={styles.titleContainer}>
+            <View style={styles.titleAndHelpIconContainer}>
+              <Text style={styles.title}>Trusted Network</Text>
+              <TouchableOpacity
+                onPress={toggleModal}
+                style={styles.helpIcon}
+              >
+                <Ionicons
+                  name="ios-help-circle-outline"
+                  size={28}
+                  color="black"
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate("AddToPN")}>
+              <Ionicons
+                name="ios-add-circle-outline"
+                size={28}
+                color="black"
+                style={styles.plusIcon}
               />
-            </View>
-            <View style={styles.formContainer}>
-              <View style={styles.textAndIconContainer}>
-                <Text style={styles.userName}>{user.name}</Text>
-                <TouchableOpacity>
-                  <Ionicons
-                    name="ios-create-outline"
-                    size={28}
-                    color="black"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+            </TouchableOpacity>
           </View>
-        ))}
-      </View>
 
-      <View style={styles.titleContainer}>
-        <View style={styles.titleAndHelpIconContainer}>
-          <Text style={styles.title}>Help Requests</Text>
-          <TouchableOpacity
-            onPress={toggleHelpRequestModal}
-            style={styles.helpIcon}
+          <Modal
+            isVisible={isModalVisible}
+            onBackdropPress={toggleModal}
           >
-            <Ionicons
-              name="ios-help-circle-outline"
-              size={28}
-              color="black"
-            />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity>
-          <Ionicons
-            name="ios-add-circle-outline"
-            size={28}
-            color="black"
-            style={styles.plusIcon}
-          />
-        </TouchableOpacity>
-      </View>
+            <View style={styles.modal}>
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={toggleModal}
+              >
+                <Text style={styles.modalCloseButtonText}>X</Text>
+              </TouchableOpacity>
+              <Text style={styles.modalTitle}>What's Trusted Network?</Text>
+              <Text style={styles.modalContent}>
+                This is your network of trusted walkers or sitters that you've
+                worked with or people you know personally who use Pup Planner.
+                Add them manually or from their profile!
+              </Text>
+            </View>
+          </Modal>
 
-      <Modal
-        isVisible={isHelpRequestModalVisible}
-        onBackdropPress={toggleHelpRequestModal}
-      >
-        <View style={styles.modal}>
-          <TouchableOpacity
-            style={styles.modalCloseButton}
-            onPress={toggleHelpRequestModal}
-          >
-            <Text style={styles.modalCloseButtonText}>X</Text>
-          </TouchableOpacity>
-          <Text style={styles.modalTitle}>What's a Help Request?</Text>
-          <Text style={styles.modalContent}>
-            These are requests posted by your trusted network! You can post your
-            own or lend a helping hand!
-          </Text>
-        </View>
-      </Modal>
-
-      <View style={styles.usersContainer}>
-        {users.map(
-          (user) =>
-            user.helpRequest && (
+          <View style={styles.usersContainer}>
+            {users.map((user) => (
               <View
                 key={user.id}
                 style={styles.userCard}
@@ -210,71 +162,146 @@ const Community = ({ navigation }) => {
                     source={user.image}
                     style={styles.userImage}
                   />
-                  <Text style={styles.userName}>{user.name}</Text>
                 </View>
                 <View style={styles.formContainer}>
                   <View style={styles.textAndIconContainer}>
-                    <Text style={styles.userName}>{user.helpRequest}</Text>
+                    <Text style={styles.userName}>{user.name}</Text>
+                    <TouchableOpacity>
+                      <Ionicons
+                        name="ios-create-outline"
+                        size={28}
+                        color="black"
+                      />
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
-            )
-        )}
-      </View>
+            ))}
+          </View>
 
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Trusted Network Feed</Text>
-        <TouchableOpacity>
-          <Ionicons
-            name="ios-add-circle-outline"
-            size={28}
-            color="black"
-            style={styles.plusIcon}
-          />
-        </TouchableOpacity>
-      </View>
+          <View style={styles.titleContainer}>
+            <View style={styles.titleAndHelpIconContainer}>
+              <Text style={styles.title}>Help Requests</Text>
+              <TouchableOpacity
+                onPress={toggleHelpRequestModal}
+                style={styles.helpIcon}
+              >
+                <Ionicons
+                  name="ios-help-circle-outline"
+                  size={28}
+                  color="black"
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity>
+              <Ionicons
+                name="ios-add-circle-outline"
+                size={28}
+                color="black"
+                style={styles.plusIcon}
+              />
+            </TouchableOpacity>
+          </View>
 
-      <View style={styles.feedCard}>
-        <Image
-          source={require("../assets/network_dog_1.png")}
-          style={styles.feedImage}
-        />
-        <View style={styles.userInfoContainer}>
-          <View style={styles.imageContainer}>
+          <Modal
+            isVisible={isHelpRequestModalVisible}
+            onBackdropPress={toggleHelpRequestModal}
+          >
+            <View style={styles.modal}>
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={toggleHelpRequestModal}
+              >
+                <Text style={styles.modalCloseButtonText}>X</Text>
+              </TouchableOpacity>
+              <Text style={styles.modalTitle}>What's a Help Request?</Text>
+              <Text style={styles.modalContent}>
+                These are requests posted by your trusted network! You can post
+                your own or lend a helping hand!
+              </Text>
+            </View>
+          </Modal>
+
+          <View style={styles.usersContainer}>
+            {users.map(
+              (user) =>
+                user.helpRequest && (
+                  <View
+                    key={user.id}
+                    style={styles.userCard}
+                  >
+                    <View style={styles.imageContainer}>
+                      <Image
+                        source={user.image}
+                        style={styles.userImage}
+                      />
+                      <Text style={styles.userName}>{user.name}</Text>
+                    </View>
+                    <View style={styles.formContainer}>
+                      <View style={styles.textAndIconContainer}>
+                        <Text style={styles.userName}>{user.helpRequest}</Text>
+                      </View>
+                    </View>
+                  </View>
+                )
+            )}
+          </View>
+
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Trusted Network Feed</Text>
+            <TouchableOpacity>
+              <Ionicons
+                name="ios-add-circle-outline"
+                size={28}
+                color="black"
+                style={styles.plusIcon}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.feedCard}>
             <Image
-              source={require("../assets/john.png")}
-              style={styles.userImage}
+              source={require("../assets/network_dog_1.png")}
+              style={styles.feedImage}
             />
-            <Text style={styles.userName}>John</Text>
+            <View style={styles.userInfoContainer}>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require("../assets/john.png")}
+                  style={styles.userImage}
+                />
+                <Text style={styles.userName}>John</Text>
+              </View>
+              <View style={styles.feedFormContainer}>
+                <Text>
+                  Cooper has been doing so well with his training! Celebrating
+                  with a puppucino!
+                </Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.feedFormContainer}>
-            <Text>
-              Cooper has been doing so well with his training! Celebrating with
-              a puppucino!
-            </Text>
-          </View>
-        </View>
-      </View>
 
-      <View style={styles.feedCard}>
-        <Image
-          source={require("../assets/network_dog_2.png")}
-          style={styles.feedImage}
-        />
-        <View style={styles.userInfoContainer}>
-          <View style={styles.imageContainer}>
+          <View style={styles.feedCard}>
             <Image
-              source={require("../assets/sammy.png")}
-              style={styles.userImage}
+              source={require("../assets/network_dog_2.png")}
+              style={styles.feedImage}
             />
-            <Text style={styles.userName}>Sammy</Text>
+            <View style={styles.userInfoContainer}>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require("../assets/sammy.png")}
+                  style={styles.userImage}
+                />
+                <Text style={styles.userName}>Sammy</Text>
+              </View>
+              <View style={styles.feedFormContainer}>
+                <Text>Weekly hike with my sweet bb {"<3"}</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.feedFormContainer}>
-            <Text>Weekly hike with my sweet bb {"<3"}</Text>
-          </View>
-        </View>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </ScreenWrapper>
   );
 };
 
@@ -282,12 +309,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingTop: 60,
   },
   navbar: {
     flexDirection: "row",
     justifyContent: "space-around",
     padding: 10,
     backgroundColor: "#B8DFA9",
+    zIndex: 1,
+    position: "absolute",
+    width: "100%",
+    top: 0,
   },
   navText: {
     color: "black",

@@ -91,10 +91,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    // Add the elevation property for Android (works only on Android)
+    // Elevation property for Android
     elevation: 6,
-    // Add the shadow properties for iOS (works only on iOS)
-    shadowOffset: { width: 0, height: 5 },
+    // Shadow properties for iOS
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.5,
     shadowColor: "#000",
   },
