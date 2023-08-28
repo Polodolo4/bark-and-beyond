@@ -12,7 +12,7 @@ import Modal from "react-native-modal";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ScreenWrapper from "../../ScreenWrapper";
 import AppContext from "./AppContext";
-import { useFocusEffect } from "@react-navigatsd/native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Community = ({ navigation }) => {
   const { selectedTab, setSelectedTab } = useContext(AppContext);
