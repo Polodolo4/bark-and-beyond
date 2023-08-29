@@ -20,6 +20,7 @@ import Settings from "./src/Dashboard/components/Settings";
 import PostDetail from "./src/Dashboard/components/PostDetail";
 import ProfilePN from "./src/Dashboard/components/ProfilePN";
 import { firebase } from "./Firebase/firebase.js";
+import RequestHelp from "./src/Dashboard/components/RequestHelp";
 
 const Stack = createStackNavigator();
 
@@ -106,6 +107,10 @@ const App = () => {
         <Stack.Screen
           name="ProfilePN"
           component={ProfilePN}
+        />
+        <Stack.Screen
+          name="RequestHelp"
+          component={RequestHelp}
         />
       </Stack.Navigator>
     </NavigationContainer>
