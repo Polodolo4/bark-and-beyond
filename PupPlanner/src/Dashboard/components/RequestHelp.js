@@ -37,7 +37,7 @@ const InputField = ({
   </View>
 );
 
-const AddToPN = () => {
+const RequestHelp = () => {
   const [help, setHelp] = useState("");
   const [day, setDay] = useState("");
   const [time, setTime] = useState("");
@@ -126,7 +126,7 @@ const AddToPN = () => {
   );
 };
 
-export default AddToPN;
+export default RequestHelp;
 
 const styles = StyleSheet.create({
   greenBackground: {
