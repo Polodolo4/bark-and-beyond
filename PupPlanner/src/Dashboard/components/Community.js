@@ -32,8 +32,6 @@ const Community = ({ navigation }) => {
   const [isHelpRequestModalVisible, setHelpRequestModalVisible] =
     useState(false);
 
-  //const [selectedSection, setSelectedSection] = useState("Network");
-
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -121,7 +119,7 @@ const Community = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate("AddToPN")}>
+            <TouchableOpacity>
               <Ionicons
                 name="ios-add-circle-outline"
                 size={28}

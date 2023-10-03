@@ -41,10 +41,10 @@ const Dashboard = ({ route, navigation }) => {
           const dogProfileData = docSnapshot.data();
           setDogProfile(dogProfileData);
         }
-        setLoading(false); // Set loading to false after fetching the data
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching dogProfile:", error);
-        setLoading(false); // Set loading to false even if there's an error
+        setLoading(false);
       }
     };
 
@@ -52,7 +52,7 @@ const Dashboard = ({ route, navigation }) => {
   }, [email]);
 
   const handleInteraction = () => {
-    setTextSize(28); // Increase the text size when the user interacts
+    setTextSize(28);
   };
 
   const panResponder = PanResponder.create({
