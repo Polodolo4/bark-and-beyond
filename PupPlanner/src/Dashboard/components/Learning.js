@@ -132,7 +132,10 @@ const Learning = ({ navigation }) => {
               </View>
               <Text style={styles.boxText}>Shop</Text>
             </View>
-            <View style={styles.box}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Training")}
+              style={styles.box}
+            >
               <View style={styles.imageContainer}>
                 <Image
                   source={require("../assets/smalldog.png")}
@@ -140,7 +143,7 @@ const Learning = ({ navigation }) => {
                 />
               </View>
               <Text style={styles.boxText}>Training</Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <Image
             source={require("../assets/doggypaws.png")}
