@@ -5,6 +5,7 @@ import Navigation from "./Navigation";
 import Notifications from "./Notifications";
 import ScreenWrapper from "../../ScreenWrapper";
 import HelpRequests from "./HelpRequests";
+import TrustedNetworkFeed from "./TrustedNetworkFeed";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -40,10 +41,10 @@ const Dashboard = ({ route, navigation }) => {
           const dogProfileData = docSnapshot.data();
           setDogProfile(dogProfileData);
         }
-        setLoading(false); // Set loading to false after fetching the data
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching dogProfile:", error);
-        setLoading(false); // Set loading to false even if there's an error
+        setLoading(false);
       }
     };
 
@@ -51,7 +52,7 @@ const Dashboard = ({ route, navigation }) => {
   }, [email]);
 
   const handleInteraction = () => {
-    setTextSize(28); // Increase the text size when the user interacts
+    setTextSize(28);
   };
 
   const panResponder = PanResponder.create({
@@ -111,6 +112,7 @@ const Dashboard = ({ route, navigation }) => {
         <Notifications />
         <Navigation />
         <HelpRequests />
+        <TrustedNetworkFeed />
       </ScrollView>
     </ScreenWrapper>
   );
