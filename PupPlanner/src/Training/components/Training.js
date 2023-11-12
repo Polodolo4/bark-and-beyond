@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Carousel from "react-native-new-snap-carousel";
 import ScreenWrapper from "../../ScreenWrapper";
+import TrainingSlider from "./TrainingSlider";
 
 const { width } = Dimensions.get("window");
 const slideWidth = width - 8;
@@ -28,27 +29,6 @@ const trainingVideos = [
   },
 ];
 
-const categoriesData = [
-  {
-    id: 1,
-    images: [
-      require("../assets/LearnPaw.png"),
-      require("../assets/LearnSit.png"),
-      require("../assets/LearnDown.png"),
-      require("../assets/LearnCome.png"),
-    ],
-  },
-  {
-    id: 2,
-    images: [
-      require("../assets/LearnPaw.png"),
-      require("../assets/LearnSit.png"),
-      require("../assets/LearnDown.png"),
-      require("../assets/LearnCome.png"),
-    ],
-  },
-];
-
 const Training = ({ navigation }) => {
   const renderItem = ({ item }) => {
     return (
@@ -61,29 +41,7 @@ const Training = ({ navigation }) => {
     );
   };
 
-  const renderCategoryItem = ({ item }) => {
-    return (
-      <View style={styles.slideTwo}>
-        {item.images.map((imageSource, index) => (
-          <View
-            key={index}
-            style={styles.row}
-          >
-            <Image
-              source={imageSource}
-              style={styles.imageTwo}
-            />
-          </View>
-        ))}
-      </View>
-    );
-  };
-
   const snapOffsets = trainingVideos.map((_, index) => index * slideWidth);
-
-  const snapOffsetsCategories = categoriesData.map(
-    (_, index) => index * slideWidth
-  );
 
   return (
     <ScreenWrapper navigation={navigation}>
@@ -102,18 +60,8 @@ const Training = ({ navigation }) => {
           snapToOffsets={snapOffsets}
         />
         <Text style={styles.headers}>Categories</Text>
-        <Carousel
-          data={categoriesData}
-          renderItem={renderCategoryItem}
-          sliderWidth={width}
-          itemWidth={slideWidth}
-          loop={false}
-          loopClonesPerSide={categoriesData.length}
-          firstItem={0}
-          inactiveSlideScale={1}
-          inactiveSlideOpacity={1}
-          snapToOffsets={snapOffsetsCategories}
-        />
+
+        <TrainingSlider />
       </ScrollView>
     </ScreenWrapper>
   );
@@ -162,9 +110,5 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "cover",
     borderRadius: 16,
-  },
-  categoryText: {
-    marginTop: 8,
-    fontSize: 16,
   },
 });
