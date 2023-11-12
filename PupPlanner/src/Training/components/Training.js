@@ -1,12 +1,20 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import Carousel from "react-native-new-snap-carousel";
 import ScreenWrapper from "../../ScreenWrapper";
+import TrainingSlider from "./TrainingSlider";
 
 const { width } = Dimensions.get("window");
 const slideWidth = width - 8;
 
-const slides = [
+const trainingVideos = [
   {
     id: 1,
     imageSource: require("../assets/TunnelDog.png"),
@@ -33,22 +41,28 @@ const Training = ({ navigation }) => {
     );
   };
 
-  const snapOffsets = slides.map((_, index) => index * slideWidth);
+  const snapOffsets = trainingVideos.map((_, index) => index * slideWidth);
 
   return (
     <ScreenWrapper navigation={navigation}>
-      <Carousel
-        data={slides}
-        renderItem={renderItem}
-        sliderWidth={width}
-        itemWidth={slideWidth}
-        loop={false}
-        loopClonesPerSide={slides.length}
-        firstItem={0}
-        inactiveSlideScale={1}
-        inactiveSlideOpacity={1}
-        snapToOffsets={snapOffsets}
-      />
+      <ScrollView>
+        <Text style={styles.headers}>Training Videos</Text>
+        <Carousel
+          data={trainingVideos}
+          renderItem={renderItem}
+          sliderWidth={width}
+          itemWidth={slideWidth}
+          loop={false}
+          loopClonesPerSide={trainingVideos.length}
+          firstItem={0}
+          inactiveSlideScale={1}
+          inactiveSlideOpacity={1}
+          snapToOffsets={snapOffsets}
+        />
+        <Text style={styles.headers}>Categories</Text>
+
+        <TrainingSlider />
+      </ScrollView>
     </ScreenWrapper>
   );
 };
@@ -56,6 +70,13 @@ const Training = ({ navigation }) => {
 export default Training;
 
 const styles = StyleSheet.create({
+  headers: {
+    marginLeft: 16,
+    marginTop: 30,
+    color: "#000",
+    fontSize: 22,
+    fontWeight: "700",
+  },
   slideOne: {
     width: slideWidth,
     height: 275,
@@ -68,5 +89,26 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "cover",
     borderRadius: 8,
+  },
+  slideTwo: {
+    width: slideWidth,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 8,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  row: {
+    width: "45%",
+    height: 250,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: "2%",
+  },
+  imageTwo: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+    borderRadius: 16,
   },
 });
