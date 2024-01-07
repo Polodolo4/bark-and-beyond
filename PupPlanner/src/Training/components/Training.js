@@ -62,6 +62,30 @@ const Training = ({ navigation }) => {
         <Text style={styles.headers}>Categories</Text>
 
         <TrainingSlider />
+
+        <View style={styles.favoritesContainer}>
+          <View style={styles.contentContainer}>
+            <View style={styles.heartContainer}>
+              <Image source={require("../assets/HeartIcon.png")} />
+            </View>
+            <Text style={styles.textContainer}>Favorites</Text>
+            <View style={styles.chevronContainer}>
+              <Image source={require("../assets/ChevronRight.png")} />
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.masteredContainer}>
+          <View style={styles.contentContainer}>
+            <View style={styles.iconContainer}>
+              <Image source={require("../assets/CheckMarkIcon.png")} />
+            </View>
+            <Text style={styles.masteredTextContainer}>Mastered</Text>
+            <View style={styles.chevronContainer}>
+              <Image source={require("../assets/ChevronRight.png")} />
+            </View>
+          </View>
+        </View>
       </ScrollView>
     </ScreenWrapper>
   );
@@ -110,5 +134,57 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "cover",
     borderRadius: 16,
+  },
+  favoritesContainer: {
+    backgroundColor: "#B8DFA9",
+    width: width - 32,
+    height: 66,
+    textAlign: "center",
+    marginTop: 12,
+    marginRight: 16,
+    marginLeft: 16,
+    marginBottom: 8,
+    borderRadius: 8,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingHorizontal: 16,
+    height: "100%",
+  },
+  heartContainer: {
+    //  height: 12,
+    alignItems: "center",
+  },
+  iconContainer: {
+    //  height: 12,
+    marginLeft: -6,
+    alignItems: "center",
+  },
+  textContainer: {
+    fontSize: 22,
+    fontWeight: 700,
+    marginLeft: 22,
+  },
+  masteredTextContainer: {
+    fontSize: 22,
+    fontWeight: 700,
+    marginLeft: 8,
+  },
+  chevronContainer: {
+    height: 13.29,
+    marginLeft: "auto",
+  },
+  masteredContainer: {
+    backgroundColor: "#B8DFA9",
+    width: width - 32,
+    height: 66,
+    textAlign: "center",
+    marginTop: 6,
+    marginRight: 16,
+    marginLeft: 16,
+    marginBottom: 8,
+    borderRadius: 8,
   },
 });

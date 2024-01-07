@@ -1,6 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import Carousel from "react-native-new-snap-carousel";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 const slideWidth = width * 0.45;
@@ -11,31 +19,42 @@ const slides = [
     backgroundColor: "#B8DFA9",
     imageSource: require("../assets/services.png"),
     title: "Services",
+    screen: "Services",
   },
   {
     id: 2,
     backgroundColor: "#BAE7FF",
     imageSource: require("../assets/learning.png"),
     title: "Learning",
+    screen: "Learning",
   },
   {
     id: 3,
     backgroundColor: "#FFD773",
     imageSource: require("../assets/community.png"),
     title: "Community",
+    screen: "Community",
   },
 ];
 
 const Navigation = () => {
+  const navigation = useNavigation();
+
   const renderItem = ({ item }) => {
+    const navigateToScreen = () => {
+      navigation.navigate(item.screen);
+    };
+
     return (
-      <View style={[styles.slide, { backgroundColor: item.backgroundColor }]}>
-        <Image
-          source={item.imageSource}
-          style={styles.image}
-        />
-        <Text style={styles.text}>{item.title}</Text>
-      </View>
+      <TouchableOpacity onPress={navigateToScreen}>
+        <View style={[styles.slide, { backgroundColor: item.backgroundColor }]}>
+          <Image
+            source={item.imageSource}
+            style={styles.image}
+          />
+          <Text style={styles.text}>{item.title}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
